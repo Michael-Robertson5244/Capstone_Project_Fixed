@@ -24,12 +24,14 @@ public class JavaFX extends Application {
     	
     	
     	Button createButton = new Button("Create a room");
-        createButton.setOnAction(new EventHandler<ActionEvent>() {
+        createButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #2b5780; -fx-background-color: #efebe2;");
+    	
+    	createButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 // TODO: Add logic for creating a room
             	Group createRoomGroup = new Group();
-                Scene addScene = new Scene(createRoomGroup,550,700);
+                Scene createRoomScene = new Scene(createRoomGroup,550,700);
                 
                 Button previousButton = new Button("Previous");
                 previousButton.setTranslateX(450);
@@ -40,19 +42,21 @@ public class JavaFX extends Application {
                 createRoomGroup.getChildren().addAll(previousButton);
                 
                 
-                primaryStage.setScene(addScene);
+                primaryStage.setScene(createRoomScene);
                 primaryStage.show();
             }
         });
 
         // Create the "Join a room" button
         Button joinButton = new Button("Join a room");
+        joinButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #2b5780; -fx-background-color: #efebe2;");
+        
         joinButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 // TODO: Add logic for joining a room
             	Group joinGroup = new Group();
-                Scene addScene = new Scene(joinGroup,550,700);
+                Scene joinScene = new Scene(joinGroup,550,700);
                 
                 Button previousButton = new Button("Previous");
                 previousButton.setTranslateX(450);
@@ -63,18 +67,20 @@ public class JavaFX extends Application {
                 joinGroup.getChildren().addAll(previousButton);
                 
                 
-                primaryStage.setScene(addScene);
+                primaryStage.setScene(joinScene);
                 primaryStage.show();
             }
         });
         
         Button loginButton = new Button("Login");
+        loginButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #2b5780; -fx-background-color: #efebe2;");
+        
         loginButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 // TODO: Add logic for joining a room
             	Group loginGroup = new Group();
-                Scene addScene = new Scene(loginGroup,550,700);
+                Scene loginScene = new Scene(loginGroup,550,700);
                 
                 Button previousButton = new Button("Previous");
                 previousButton.setTranslateX(450);
@@ -85,18 +91,20 @@ public class JavaFX extends Application {
                 loginGroup.getChildren().addAll(previousButton);
                 
                 
-                primaryStage.setScene(addScene);
+                primaryStage.setScene(loginScene);
                 primaryStage.show();
             }
         });
         
         Button createAccountButton = new Button("Create an Account");
+        createAccountButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #2b5780; -fx-background-color: #efebe2;");
+        
         createAccountButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 // TODO: Add logic for joining a room
                Group createAccountGroup = new Group();
-               Scene addScene = new Scene(createAccountGroup,550,700);
+               Scene createAccountScene = new Scene(createAccountGroup,550,700);
                
                Button previousButton = new Button("Previous");
                previousButton.setTranslateX(450);
@@ -107,18 +115,20 @@ public class JavaFX extends Application {
                createAccountGroup.getChildren().addAll(previousButton);
                
                
-               primaryStage.setScene(addScene);
+               primaryStage.setScene(createAccountScene);
                primaryStage.show();
             }
         });
         
         //temporary
         Button playButton = new Button("PLAY");
+        playButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #2b5780; -fx-background-color: #efebe2;");
+        
         playButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
             	Group playGroup = new Group();
-                Scene addScene = new Scene(playGroup,550,700);
+                Scene playScene = new Scene(playGroup,550,700);
                 
                 Button previousButton = new Button("Previous");
                 previousButton.setTranslateX(450);
@@ -131,7 +141,7 @@ public class JavaFX extends Application {
                 
                 
                 
-                primaryStage.setScene(addScene);
+                primaryStage.setScene(playScene);
                 primaryStage.show();
             	
             }
@@ -146,7 +156,6 @@ public class JavaFX extends Application {
         // Create a stack pane to center the buttons in the middle of the screen
         stackPane = new StackPane(createButton, joinButton,loginButton,createAccountButton, playButton);
         stackPane.setAlignment(Pos.CENTER);
-        //stackPane.setSpacing(20);
 
         // Create the scene and set it on the stage
         scene = new Scene(stackPane, 550, 700);
@@ -158,13 +167,6 @@ public class JavaFX extends Application {
     public void playGame() {
     	
     }
-    
-    @SuppressWarnings("exports")
-	/*public Button previousButton(){
-    	Button previousButton = new Button("Previous");
-        previousButton.setOnAction(f->primaryStage.setScene(scene));
-        
-    }*/
     
     public static void main(String[] args) {
         launch();
