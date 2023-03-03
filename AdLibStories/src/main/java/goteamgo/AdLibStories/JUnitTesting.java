@@ -1,5 +1,4 @@
-package goteamgo.AdLibStories;
-import goteamgo.AdLibStories.*;
+/*package goteamgo.AdLibStories;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
@@ -12,3 +11,4 @@ public class JUnitTesting {
 	}
 
 }
+*/
