@@ -12,6 +12,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -19,6 +20,7 @@ import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class JavaFX extends Application {
@@ -94,6 +96,7 @@ public class JavaFX extends Application {
             @Override
             public void handle(ActionEvent e) {
                 // TODO: Add logic for joining a room
+            	
             	Group loginGroup = new Group();
                 Scene loginScene = new Scene(loginGroup,550,700);
                 
@@ -143,10 +146,21 @@ public class JavaFX extends Application {
 		
         playButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent e) {
+            public void handle(ActionEvent e) {	
             	Group playGroup = new Group();
                 Scene playScene = new Scene(playGroup,550,700);
-                
+
+            	BorderPane borderPane = new BorderPane();
+            	HBox prompt = new HBox();
+            	borderPane.setTop(prompt);
+            	
+            	//game.setPrompt();
+            	borderPane.setTranslateY(100);
+            	Text promptText = new Text("prompt goes here");
+            	
+            	
+            	borderPane.getChildren().add(promptText);
+            	
                 Button previousButton = new Button("Previous");
                 previousButton.setTranslateX(450);
                 previousButton.setTranslateY(600);
@@ -154,8 +168,9 @@ public class JavaFX extends Application {
                 previousButton.setOnAction(f->primaryStage.setScene(scene));
                 previousButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #2b5780; -fx-background-color: #efebe2;");
                 
-                playGroup.getChildren().addAll(previousButton);
-                playScene.setFill(new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE, new Stop(0, Color.web("#FFFDD0")), new Stop(1, Color.web("#F00000"))));
+                
+                playGroup.getChildren().addAll(borderPane, previousButton);
+                //playScene.setFill(new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE, new Stop(0, Color.web("#FFFDD0")), new Stop(1, Color.web("#F00000"))));
                 
                 primaryStage.setScene(playScene);
                 primaryStage.show();
