@@ -15,12 +15,15 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
 public class JavaFX extends Application {
@@ -151,18 +154,24 @@ public class JavaFX extends Application {
                 Scene playScene = new Scene(playGroup,550,700);
 
             	BorderPane borderPane = new BorderPane();
-            	HBox prompt = new HBox();
-            	borderPane.setTop(prompt);
-            	
+            	VBox prompt = new VBox();
             	//game.setPrompt();
-            	borderPane.setTranslateY(100);
-            	Text promptText = new Text("prompt goes here");
+            	Text promptText = new Text("prompt goes hereas oijgioasjdiogjearh ierhieriuhaeiurhieh hhhhhhhhhhhhhh hhhh hhhhhhhhhhhhh");
+            	TextFlow textFlow = new TextFlow(promptText);
+            	textFlow.setTextAlignment(TextAlignment.CENTER);
+            	//textFlow.setPrefWidth(500);
+            	prompt.getChildren().add(textFlow);
+            	//textFlow.setTextAlignment(TextAlignment.CENTER);
+            	prompt.setAlignment(Pos.CENTER);
+       
+            	//prompt.setTranslateX(225);
+            	borderPane.setTop(prompt);
+            	//BorderPane.setAlignment(prompt,Pos.CENTER);
+        
             	
-            	
-            	borderPane.getChildren().add(promptText);
             	
                 Button previousButton = new Button("Previous");
-                previousButton.setTranslateX(450);
+                previousButton.setTranslateX(500);
                 previousButton.setTranslateY(600);
                 
                 previousButton.setOnAction(f->primaryStage.setScene(scene));

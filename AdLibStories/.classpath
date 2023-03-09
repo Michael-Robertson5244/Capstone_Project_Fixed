@@ -28,6 +28,5 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/Users/tiasharpe/Downloads/slf4j-api-2.0.6.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
