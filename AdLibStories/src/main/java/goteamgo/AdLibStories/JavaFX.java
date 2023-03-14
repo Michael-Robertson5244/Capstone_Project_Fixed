@@ -1,19 +1,27 @@
 package goteamgo.AdLibStories;
 
+import java.awt.ScrollPane;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
+import javax.swing.JScrollPane;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -22,43 +30,55 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
-import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
 public class JavaFX extends Application {
 
 	StackPane stackPane = new StackPane();
-	Scene scene = new Scene(stackPane,550,700);
+	Scene scene = new Scene(stackPane,900,700);
+	
 	Game game = new Game();
 	
     @Override
     public void start(Stage primaryStage) throws Exception {
         // TODO Auto-generated method stub
-
+    
+    	// adding logo
     	
+    	InputStream stream = new FileInputStream("AdLibStories.png");
+        Image logo = new Image(stream);
         
-    	// Create the "Create a room" button
+        ImageView imageView = new ImageView();
+        imageView.setImage(logo);
+        
+        imageView.setFitHeight(400);
+        imageView.setFitWidth(400);
+
+        
+        // Create the "Create a room" button
     	
-    	Button createButton = new Button("Create a room");
-        createButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #2b5780; -fx-background-color: #efebe2;");
-		
+    	Button createButton = new Button("CREATE A ROOM");
+       
+    	createButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+    	createButton.setFont(new Font("Times New Roman", 20));
+    	createButton.setPrefWidth(250);
+    	
     	createButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 // TODO: Add logic for creating a room
             	Group createRoomGroup = new Group();
-                Scene createRoomScene = new Scene(createRoomGroup,550,700);
+                Scene createRoomScene = new Scene(createRoomGroup,900,700);
                 
                 Button previousButton = new Button("Previous");
                 previousButton.setTranslateX(450);
                 previousButton.setTranslateY(600);
                 
                 previousButton.setOnAction(f->primaryStage.setScene(scene));
-                previousButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #2b5780; -fx-background-color: #efebe2;");
+                previousButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
                 
                 createRoomGroup.getChildren().addAll(previousButton);
-                createRoomScene.setFill(new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE, new Stop(0, Color.web("#FFFDD0")), new Stop(1, Color.web("#F00000"))));
+                createRoomScene.setFill(Color.web("#FFFDD0"));
                 
                 primaryStage.setScene(createRoomScene);
                 primaryStage.show();
@@ -67,33 +87,39 @@ public class JavaFX extends Application {
 
         // Create the "Join a room" button
     	
-        Button joinButton = new Button("Join a room");
-        joinButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #2b5780; -fx-background-color: #efebe2;");
+        Button joinButton = new Button("JOIN A ROOM");
+        
+        joinButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+		joinButton.setFont(new Font("Times New Roman", 20));
+		joinButton.setPrefWidth(250);
 		
         joinButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 // TODO: Add logic for joining a room
             	Group joinGroup = new Group();
-                Scene joinScene = new Scene(joinGroup,550,700);
+                Scene joinScene = new Scene(joinGroup,900,700);
                 
                 Button previousButton = new Button("Previous");
                 previousButton.setTranslateX(450);
                 previousButton.setTranslateY(600);
                 
                 previousButton.setOnAction(f->primaryStage.setScene(scene));
-                previousButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #2b5780; -fx-background-color: #efebe2;");
+                previousButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
                 
                 joinGroup.getChildren().addAll(previousButton);
-                joinScene.setFill(new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE, new Stop(0, Color.web("#FFFDD0")), new Stop(1, Color.web("#F00000"))));
+                joinScene.setFill(Color.web("#FFFDD0"));
                 
                 primaryStage.setScene(joinScene);
                 primaryStage.show();
             }
         });
         
-        Button loginButton = new Button("Login");
-        loginButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #2b5780; -fx-background-color: #efebe2;");
+        Button loginButton = new Button("LOGIN");
+       
+        loginButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+        loginButton.setFont(new Font("Times New Roman", 20));
+        loginButton.setPrefWidth(250);
         
         loginButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -101,42 +127,45 @@ public class JavaFX extends Application {
                 // TODO: Add logic for joining a room
             	
             	Group loginGroup = new Group();
-                Scene loginScene = new Scene(loginGroup,550,700);
+                Scene loginScene = new Scene(loginGroup,900,700);
                 
                 Button previousButton = new Button("Previous");
                 previousButton.setTranslateX(450);
                 previousButton.setTranslateY(600);
                 
                 previousButton.setOnAction(f->primaryStage.setScene(scene));
-                previousButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #2b5780; -fx-background-color: #efebe2;");
+                previousButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
                 
                 loginGroup.getChildren().addAll(previousButton);
-                loginScene.setFill(new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE, new Stop(0, Color.web("#FFFDD0")), new Stop(1, Color.web("#F00000"))));
+                loginScene.setFill(Color.web("#FFFDD0"));
                 
                 primaryStage.setScene(loginScene);
                 primaryStage.show();
             }
         });
         
-        Button createAccountButton = new Button("Create an Account");
-        createAccountButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #2b5780; -fx-background-color: #efebe2;");
+        Button createAccountButton = new Button("CREATE AN ACCOUNT");
+        
+        createAccountButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+        createAccountButton.setFont(new Font("Times New Roman", 20));
+        createAccountButton.setPrefWidth(250);
         
         createAccountButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 // TODO: Add logic for joining a room
                Group createAccountGroup = new Group();
-               Scene createAccountScene = new Scene(createAccountGroup,550,700);
+               Scene createAccountScene = new Scene(createAccountGroup,900,700);
                
                Button previousButton = new Button("Previous");
                previousButton.setTranslateX(450);
                previousButton.setTranslateY(600);
                
                previousButton.setOnAction(f->primaryStage.setScene(scene));
-               previousButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #2b5780; -fx-background-color: #efebe2;");
+               previousButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
                
                createAccountGroup.getChildren().addAll(previousButton);
-               createAccountScene.setFill(new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE, new Stop(0, Color.web("#FFFDD0")), new Stop(1, Color.web("#F00000"))));
+               createAccountScene.setFill(Color.web("#FFFDD0"));
                
                primaryStage.setScene(createAccountScene);
                primaryStage.show();
@@ -145,63 +174,101 @@ public class JavaFX extends Application {
         
         //temporary
         Button playButton = new Button("PLAY");
-        playButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #2b5780; -fx-background-color: #efebe2;");
+        
+        playButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+		playButton.setFont(new Font("Times New Roman", 20));
+		playButton.setPrefWidth(250);
 		
         playButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {	
             	Group playGroup = new Group();
-                Scene playScene = new Scene(playGroup,550,700);
-
-            	BorderPane borderPane = new BorderPane();
-            	VBox prompt = new VBox();
-            	//game.setPrompt();
-            	Text promptText = new Text("prompt goes hereas oijgioasjdiogjearh ierhieriuhaeiurhieh hhhhhhhhhhhhhh hhhh hhhhhhhhhhhhh");
-            	TextFlow textFlow = new TextFlow(promptText);
-            	textFlow.setTextAlignment(TextAlignment.CENTER);
-            	//textFlow.setPrefWidth(500);
-            	prompt.getChildren().add(textFlow);
-            	//textFlow.setTextAlignment(TextAlignment.CENTER);
-            	prompt.setAlignment(Pos.CENTER);
-       
-            	//prompt.setTranslateX(225);
-            	borderPane.setTop(prompt);
-            	//BorderPane.setAlignment(prompt,Pos.CENTER);
-        
+                Scene playScene = new Scene(playGroup,900,700);
             	
+            	//game.setPrompt();
+            	
+            	Label playerNames = new Label("Player Names");
+            	
+            	playerNames.setTranslateX(55);
+            	playerNames.setTranslateY(150);
+            	
+            	playerNames.setFont(new Font("Times New Roman", 20));
+            	
+            	TextArea storyTextArea = new TextArea("story line goes here");
+            	storyTextArea.setFont(new Font("Times New Roman", 20));
+            	
+            	storyTextArea.setPrefWidth(450);
+            	storyTextArea.setPrefHeight(350);
+            	
+            	storyTextArea.setTranslateX(225);
+            	storyTextArea.setTranslateY(150);
+            	
+            	storyTextArea.setEditable(false);
+            	
+            	
+            	TextArea promptText = new TextArea("prompt goes here");
+            	//promptText.setText(game.getPrompt());
+            	
+            	promptText.setFont(new Font("Times New Roman", 20));
+            	
+            	promptText.setPrefWidth(450);
+            	promptText.setPrefHeight(50);
+            	
+            	promptText.setTranslateX(225);
+            	promptText.setTranslateY(75);
+            	
+            	promptText.setEditable(false);
+            	
+            	TextArea storyEntryTextArea = new TextArea("write story here");
+            	storyEntryTextArea.setFont(new Font("Times New Roman", 20));
+            	
+            	storyEntryTextArea.setPrefWidth(450);
+            	storyEntryTextArea.setPrefHeight(50);
+            	
+            	storyEntryTextArea.setTranslateX(225);
+            	storyEntryTextArea.setTranslateY(520);
+            	
+            	Label promptLabel = new Label("Prompt:");
+            	promptLabel.setFont(new Font("Times New Roman", 20));
+            	
+            	promptLabel.setTranslateX(140);
+            	promptLabel.setTranslateY(85);
             	
                 Button previousButton = new Button("Previous");
-                previousButton.setTranslateX(500);
-                previousButton.setTranslateY(600);
+                previousButton.setTranslateX(800);
+                previousButton.setTranslateY(650);
                 
                 previousButton.setOnAction(f->primaryStage.setScene(scene));
-                previousButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #2b5780; -fx-background-color: #efebe2;");
+                previousButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
                 
-                
-                playGroup.getChildren().addAll(borderPane, previousButton);
-                //playScene.setFill(new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE, new Stop(0, Color.web("#FFFDD0")), new Stop(1, Color.web("#F00000"))));
+                playGroup.getChildren().addAll(previousButton, promptText, promptLabel, storyTextArea, storyEntryTextArea, playerNames);
+                playScene.setFill(Color.web("#FFFDD0"));
                 
                 primaryStage.setScene(playScene);
                 primaryStage.show();
             	
             }
+            
         });
         
-        joinButton.setTranslateY(50);
-        createButton.setTranslateY(5);
-        loginButton.setTranslateY(-45);
-        createAccountButton.setTranslateY(-95);
-        playButton.setTranslateY(100);
+        imageView.setTranslateY(-150);
+        joinButton.setTranslateY(140);
+        createButton.setTranslateY(90);
+        loginButton.setTranslateY(40);
+        createAccountButton.setTranslateY(-10);
+        playButton.setTranslateY(190);
 
         // Create a stack pane to center the buttons in the middle of the screen
-        stackPane = new StackPane(createButton, joinButton, loginButton, createAccountButton, playButton);
-        stackPane.setAlignment(Pos.CENTER);
+       
+        stackPane = new StackPane(createButton, joinButton, loginButton, createAccountButton, playButton, imageView);
+        stackPane.setBackground(new Background(new BackgroundFill(Color.web("#FFFDD0"), CornerRadii.EMPTY, Insets.EMPTY)));
 
-        // Create the scene and set it on the stage
-        scene.setFill(new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE, new Stop(0, Color.web("#2b5780")), new Stop(1, Color.web("#54945b"))));
-        scene = new Scene(stackPane, 550, 700);
-        //scene.setFill(new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE, new Stop(0, Color.web("#FFFDD0")), new Stop(1, Color.web("#F00000"))));
+        stackPane.setAlignment(Pos.CENTER);
+        
+        scene = new Scene(stackPane, 900, 700);
+       
         primaryStage.setScene(scene);
+        //scene.setFill(Color.web("#FFFDD0"));
         primaryStage.setTitle("Room GUI");
         primaryStage.show();
     }

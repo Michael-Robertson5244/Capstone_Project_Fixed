@@ -4,6 +4,7 @@ module goteamgo.AdLibStories {
 	requires org.mongodb.driver.sync.client;
 	requires org.mongodb.bson;
 	requires javafx.graphics;
+	requires java.desktop;
 	//requires javafx.graphics;
 	//requires junit;
     exports goteamgo.AdLibStories;
