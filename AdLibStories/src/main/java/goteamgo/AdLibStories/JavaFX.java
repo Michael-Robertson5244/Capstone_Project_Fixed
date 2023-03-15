@@ -39,7 +39,7 @@ public class JavaFX extends Application {
 	StackPane stackPane = new StackPane();
 	Scene scene = new Scene(stackPane,900,700);
 	
-	Game game = new Game();
+	static Game game = new Game();
 	
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -372,9 +372,8 @@ public class JavaFX extends Application {
             	
             	storyTextArea.setEditable(false);
             	
-            	
             	TextArea promptText = new TextArea("prompt goes here");
-            	//promptText.setText(game.getPrompt());
+            	promptText.setText(game.getPrompt());
             	
             	promptText.setFont(new Font("Times New Roman", 20));
             	
@@ -449,7 +448,8 @@ public class JavaFX extends Application {
     }
     
     public static void main(String[] args) {
-        launch();
+    	game.setPrompt();
+    	launch();
     }
 
 }
