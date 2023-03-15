@@ -1,6 +1,7 @@
 package goteamgo.AdLibStories;
 
 import java.awt.ScrollPane;
+import java.awt.TextField;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -16,6 +17,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -71,8 +73,8 @@ public class JavaFX extends Application {
                 Scene createRoomScene = new Scene(createRoomGroup,900,700);
                 
                 Button previousButton = new Button("Previous");
-                previousButton.setTranslateX(450);
-                previousButton.setTranslateY(600);
+                previousButton.setTranslateX(800);
+                previousButton.setTranslateY(650);
                 
                 previousButton.setOnAction(f->primaryStage.setScene(scene));
                 previousButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
@@ -100,14 +102,37 @@ public class JavaFX extends Application {
             	Group joinGroup = new Group();
                 Scene joinScene = new Scene(joinGroup,900,700);
                 
+                Label joinLabel = new Label("Enter Room Code:");
+                joinLabel.setFont(new Font("Times New Roman", 30));
+                
+                joinLabel.setTranslateX(322);
+                joinLabel.setTranslateY(250);
+                
+                TextArea joinArea = new TextArea("room code goes here");
+                
+                joinArea.setPrefWidth(200);
+                joinArea.setPrefHeight(50);
+                
+                joinArea.setTranslateX(335);
+                joinArea.setTranslateY(330);
+                
+                Button joinRoomButton = new Button("JOIN ROOM");
+                joinRoomButton.setStyle("-fx-background-radius: 25px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+                joinRoomButton.setFont(new Font("Times New Roman", 20));
+                
+                joinRoomButton.setPrefWidth(200);
+                
+                joinRoomButton.setTranslateX(335);
+                joinRoomButton.setTranslateY(430);
+            
                 Button previousButton = new Button("Previous");
-                previousButton.setTranslateX(450);
-                previousButton.setTranslateY(600);
+                previousButton.setTranslateX(800);
+                previousButton.setTranslateY(650);
                 
                 previousButton.setOnAction(f->primaryStage.setScene(scene));
                 previousButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
                 
-                joinGroup.getChildren().addAll(previousButton);
+                joinGroup.getChildren().addAll(previousButton, joinRoomButton, joinLabel, joinArea);
                 joinScene.setFill(Color.web("#FFFDD0"));
                 
                 primaryStage.setScene(joinScene);
@@ -129,14 +154,62 @@ public class JavaFX extends Application {
             	Group loginGroup = new Group();
                 Scene loginScene = new Scene(loginGroup,900,700);
                 
+                Button loginButton = new Button("LOGIN");
+                loginButton.setStyle("-fx-background-radius: 25px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+                
+                loginButton.setTranslateX(370);
+                loginButton.setTranslateY(500);
+                
+                loginButton.setPrefWidth(200);
+                
+                loginButton.setFont(new Font("Times New Roman", 25));
+                
+                Label loginTitle = new Label("LOGIN");
+                
+                loginTitle.setFont(new Font("Times New Roman", 50));
+                
+                loginTitle.setTranslateX(370);
+                loginTitle.setTranslateY(100);
+                
+                Label username = new Label("USERNAME:");
+                
+                username.setTranslateX(250);
+                username.setTranslateY(265);
+                
+                username.setFont(new Font("Times New Roman", 25));
+                
+                TextArea userText = new TextArea();
+                
+                userText.setPrefWidth(250);
+            	userText.setPrefHeight(50);
+            	
+            	userText.setTranslateX(425);
+            	userText.setTranslateY(250);
+                
+                Label password = new Label("PASSWORD:");
+                
+                password.setFont(new Font("Times New Roman", 25));
+                
+                password.setTranslateX(250);
+                password.setTranslateY(365);
+                
+                TextArea passText = new TextArea();
+                
+                passText.setPrefWidth(250);
+            	passText.setPrefHeight(50);
+            	
+            	passText.setTranslateX(425);
+            	passText.setTranslateY(350);
+                
                 Button previousButton = new Button("Previous");
-                previousButton.setTranslateX(450);
-                previousButton.setTranslateY(600);
+                previousButton.setTranslateX(800);
+                previousButton.setTranslateY(650);
                 
                 previousButton.setOnAction(f->primaryStage.setScene(scene));
                 previousButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
                 
-                loginGroup.getChildren().addAll(previousButton);
+                loginGroup.getChildren().addAll(previousButton, loginTitle, username, password, userText, passText, loginButton);
+               
                 loginScene.setFill(Color.web("#FFFDD0"));
                 
                 primaryStage.setScene(loginScene);
@@ -158,8 +231,8 @@ public class JavaFX extends Application {
                Scene createAccountScene = new Scene(createAccountGroup,900,700);
                
                Button previousButton = new Button("Previous");
-               previousButton.setTranslateX(450);
-               previousButton.setTranslateY(600);
+               previousButton.setTranslateX(800);
+               previousButton.setTranslateY(650);
                
                previousButton.setOnAction(f->primaryStage.setScene(scene));
                previousButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
@@ -172,7 +245,6 @@ public class JavaFX extends Application {
             }
         });
         
-        //temporary
         Button playButton = new Button("PLAY");
         
         playButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
@@ -196,6 +268,7 @@ public class JavaFX extends Application {
             	
             	TextArea storyTextArea = new TextArea("story line goes here");
             	storyTextArea.setFont(new Font("Times New Roman", 20));
+            	storyTextArea.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
             	
             	storyTextArea.setPrefWidth(450);
             	storyTextArea.setPrefHeight(350);
@@ -217,10 +290,13 @@ public class JavaFX extends Application {
             	promptText.setTranslateX(225);
             	promptText.setTranslateY(75);
             	
+            	promptText.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
+            	
             	promptText.setEditable(false);
             	
             	TextArea storyEntryTextArea = new TextArea("write story here");
             	storyEntryTextArea.setFont(new Font("Times New Roman", 20));
+            	storyEntryTextArea.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
             	
             	storyEntryTextArea.setPrefWidth(450);
             	storyEntryTextArea.setPrefHeight(50);
