@@ -374,6 +374,7 @@ public class JavaFX extends Application {
             	
             	TextArea promptText = new TextArea("prompt goes here");
             	promptText.setText(game.getPrompt());
+            	promptText.setWrapText(true);
             	
             	promptText.setFont(new Font("Times New Roman", 20));
             	
