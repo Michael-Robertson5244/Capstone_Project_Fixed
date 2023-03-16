@@ -1,3 +1,5 @@
+package goteamgo.AdLibStories;
+
 import java.util.Properties;
 import edu.stanford.nlp.pipeline.*;
 import edu.stanford.nlp.ling.CoreAnnotations.*;
