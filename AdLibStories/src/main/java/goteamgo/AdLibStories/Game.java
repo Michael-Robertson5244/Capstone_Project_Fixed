@@ -90,5 +90,33 @@ public class Game {
 	public void displayRules() {
 		
 	}
+	
+	/*TODO: Add Scoring System
+	public static int calculateScore(String sentence) {
+	    // Split the sentence into words
+	    String[] words = sentence.split("\s+");
+
+	    // Initialize counters for grammar and adjectives
+	    int grammarCount = 0;
+	    int adjCount = 0;
+
+	    // Loop through each word
+	    for (String word : words) {
+		// Check if the word is an adjective
+		if (word.endsWith("y")  word.endsWith("ly")  word.endsWith("able")  word.endsWith("ful")  word.endsWith("ous")) {
+		    adjCount++;
+		}
+
+		// Check if the word ends with a punctuation mark or is a conjunction
+		if (word.endsWith(".")  word.endsWith(",")  word.endsWith(";")  word.endsWith(":")  word.equalsIgnoreCase("and")  word.equalsIgnoreCase("or")  word.equalsIgnoreCase("but")) {
+		    grammarCount++;
+		}
+	    }
+
+	    // Calculate the score based on grammar, adjectives, and length
+	    int score = (adjCount * 5) + (words.length-20) + (grammarCount * -2);
+
+	    return score;
+	}*/
 
 }
