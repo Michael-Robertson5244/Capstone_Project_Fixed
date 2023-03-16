@@ -47,11 +47,4 @@ public class SentenceScorer {
         // Here's a simple implementation that just returns the number of words
         return sentence.split("\\s+").length;
     }
-    
-    public static void main(String[] args) {
-        SentenceScorer scorer = new SentenceScorer("java");
-        String sentence = "Java is a popular programming language that is used for developing mobile apps, web applications, and games.";
-        double score = scorer.score(sentence);
-        System.out.println(score); // Output: 20.0
-    }
 }
