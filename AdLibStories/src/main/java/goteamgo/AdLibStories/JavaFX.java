@@ -272,8 +272,28 @@ public class JavaFX extends Application {
             @Override
             public void handle(ActionEvent e) {
                 // TODO: Add logic for joining a room
+            	
                Group createAccountGroup = new Group();
                Scene createAccountScene = new Scene(createAccountGroup,900,700);
+               
+               InputStream iconStream;
+               Image icon;
+               ImageView userIcon;
+               
+			try {
+				
+				iconStream = new FileInputStream("userIcon.png");
+
+	               icon = new Image(iconStream);
+	               
+	               userIcon = new ImageView();
+	               userIcon.setImage(icon);
+	               
+	               userIcon.setFitHeight(150);
+	               userIcon.setFitWidth(150);
+	               
+	               userIcon.setTranslateX(375);
+	               userIcon.setTranslateY(95);
                
                TextArea userName = new TextArea("username");
                userName.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
@@ -282,7 +302,7 @@ public class JavaFX extends Application {
                userName.setPrefHeight(50);
                
                userName.setTranslateX(325);
-               userName.setTranslateY(250);
+               userName.setTranslateY(275);
            	
                TextArea passWord = new TextArea("password");
                passWord.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
@@ -291,16 +311,7 @@ public class JavaFX extends Application {
                passWord.setPrefHeight(50);
                
                passWord.setTranslateX(325);
-               passWord.setTranslateY(325);
-           	
-               TextArea email = new TextArea("email");
-               email.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
-           	
-               email.setPrefWidth(250);
-               email.setPrefHeight(50);
-               
-               email.setTranslateX(325);
-               email.setTranslateY(400);
+               passWord.setTranslateY(350);
            	
                TextArea displayName = new TextArea("display name");
                displayName.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
@@ -309,11 +320,18 @@ public class JavaFX extends Application {
                displayName.setPrefHeight(50);
                
                displayName.setTranslateX(325);
-               displayName.setTranslateY(475);
+               displayName.setTranslateY(425);
+            
            	
-               Button next = new Button();
+               Button create = new Button("CREATE ACCOUNT");
+               create.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+               create.setFont(new Font("Times New Roman", 20));
+               create.setPrefWidth(250);
                
-               next.setOnAction(new EventHandler<ActionEvent>() {
+               create.setTranslateX(325);
+               create.setTranslateY(525);
+               
+               create.setOnAction(new EventHandler<ActionEvent>() {
 
 				@Override
 				public void handle(ActionEvent event) {
@@ -330,9 +348,16 @@ public class JavaFX extends Application {
                previousButton.setOnAction(f->primaryStage.setScene(scene));
                previousButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
                
-               createAccountGroup.getChildren().addAll(previousButton, userName, passWord, email, displayName);
+               createAccountGroup.getChildren().addAll(previousButton, userName, passWord, displayName, userIcon, create);
                createAccountScene.setFill(Color.web("#FFFDD0"));
-               
+			
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				
+				e1.printStackTrace();
+				
+			}
+			
                primaryStage.setScene(createAccountScene);
                primaryStage.show();
             }
@@ -371,7 +396,7 @@ public class JavaFX extends Application {
             	storyTextArea.setEditable(false);
             	
             	TextArea promptText = new TextArea("prompt goes here");
-            	promptText.setText(game.getPrompt());
+            	//promptText.setText(game.getPrompt());
             	promptText.setWrapText(true);
             	
             	promptText.setFont(new Font("Times New Roman", 20));
@@ -447,7 +472,7 @@ public class JavaFX extends Application {
     }
     
     public static void main(String[] args) {
-    	game.setPrompt();
+    	//game.setPrompt();
     	launch();
     }
 
