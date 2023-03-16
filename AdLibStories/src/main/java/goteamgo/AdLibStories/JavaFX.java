@@ -396,7 +396,7 @@ public class JavaFX extends Application {
             	storyTextArea.setEditable(false);
             	
             	TextArea promptText = new TextArea("prompt goes here");
-            	//promptText.setText(game.getPrompt());
+            	promptText.setText(game.getPrompt());
             	promptText.setWrapText(true);
             	
             	promptText.setFont(new Font("Times New Roman", 20));
@@ -462,7 +462,7 @@ public class JavaFX extends Application {
         scene = new Scene(stackPane, 900, 700);
        
         primaryStage.setScene(scene);
-        //scene.setFill(Color.web("#FFFDD0"));
+        scene.setFill(Color.web("#FFFDD0"));
         primaryStage.setTitle("Room GUI");
         primaryStage.show();
     }
@@ -472,7 +472,7 @@ public class JavaFX extends Application {
     }
     
     public static void main(String[] args) {
-    	//game.setPrompt();
+    	game.setPrompt();
     	launch();
     }
 
