@@ -350,8 +350,6 @@ public class JavaFX extends Application {
             	Group playGroup = new Group();
                 Scene playScene = new Scene(playGroup,900,700);
             	
-            	//game.setPrompt();
-            	
             	Label playerNames = new Label("Player Names");
             	
             	playerNames.setTranslateX(55);
