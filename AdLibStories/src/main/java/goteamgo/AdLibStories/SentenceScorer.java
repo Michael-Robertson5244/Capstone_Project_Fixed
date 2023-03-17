@@ -5,6 +5,21 @@ import edu.stanford.nlp.pipeline.*;
 import edu.stanford.nlp.ling.CoreAnnotations.*;
 import edu.stanford.nlp.util.*;
 
+/*
+Java class that takes in a sentence and returns a score based on the length, 
+number of adjectives used, whether a specific word is used, and readability. 
+Note that this implementation uses the Stanford CoreNLP library for natural language processing. 
+
+The score method will return a score based on the length, number of adjectives used, 
+whether the specific word is used, and readability of the sentence. The score is 
+calculated by adding up the four individual scores, each of which is weighted differently. 
+In this implementation, the length score is worth 1 point per 10 characters, 
+the adjective score is worth 2 points per adjective, and the word score is 
+worth 5 points if the specific word is present and 0 points otherwise. 
+The readability score is calculated using a simple formula that just 
+counts the number of words in the sentence.
+*/
+
 public class SentenceScorer {
     
     private final String targetWord;
