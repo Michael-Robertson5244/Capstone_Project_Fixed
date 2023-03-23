@@ -90,13 +90,5 @@ public class Game {
 	public void displayRules() {
 		
 	}
-	
-	/*
-	TODO: Add Scoring System
-	SentenceScorer scorer = new SentenceScorer("java"); // "java" is the keyword for points
-        String sentence = "Java is a popular programming language that is used for developing mobile apps, web applications, and games.";
-        double score = scorer.score(sentence);
-        System.out.println(score); // Output: 20.0
-	*/
 
 }

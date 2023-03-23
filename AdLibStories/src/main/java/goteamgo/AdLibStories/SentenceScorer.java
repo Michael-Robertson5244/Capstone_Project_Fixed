@@ -104,7 +104,7 @@ public class SentenceScorer {
     }
     
     	public static void main(String[] args) {
-		    	SentenceScorer scorer = new SentenceScorer("space"); // "java" is the keyword for points
+		SentenceScorer scorer = new SentenceScorer("space"); // "java" is the keyword for points
         String sentence = "At space be when greatest for him, expected we on with did and to had value hall.";
         double score = scorer.score(sentence);
         System.out.println(score); // Output: 11.92
