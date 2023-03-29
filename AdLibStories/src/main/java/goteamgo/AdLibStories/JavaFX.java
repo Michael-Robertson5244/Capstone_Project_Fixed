@@ -140,7 +140,8 @@ public class JavaFX extends Application {
             	
             	promptText.setEditable(false);
             	
-            	TextArea storyEntryTextArea = new TextArea("write story here");
+            	TextArea storyEntryTextArea = new TextArea();
+            	storyEntryTextArea.setPromptText("Write your Story here");
             	storyEntryTextArea.setFont(new Font("Times New Roman", 20));
             	storyEntryTextArea.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
             	
@@ -149,6 +150,7 @@ public class JavaFX extends Application {
             	
             	storyEntryTextArea.setTranslateX(225);
             	storyEntryTextArea.setTranslateY(520);
+            	
             	
             	Label promptLabel = new Label("Prompt:");
             	promptLabel.setFont(new Font("Times New Roman", 20));
@@ -205,7 +207,8 @@ public class JavaFX extends Application {
 	               userIcon.setTranslateX(375);
 	               userIcon.setTranslateY(95);
                
-               TextArea userName = new TextArea("username");
+               TextArea userName = new TextArea();
+               userName.setPromptText("username");
                userName.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
            	
                userName.setPrefWidth(250);
@@ -214,7 +217,8 @@ public class JavaFX extends Application {
                userName.setTranslateX(325);
                userName.setTranslateY(275);
            	
-               TextArea passWord = new TextArea("password");
+               TextArea passWord = new TextArea();
+               passWord.setPromptText("password");
                passWord.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
            	
                passWord.setPrefWidth(250);
@@ -223,7 +227,8 @@ public class JavaFX extends Application {
                passWord.setTranslateX(325);
                passWord.setTranslateY(350);
            	
-               TextArea displayName = new TextArea("display name");
+               TextArea displayName = new TextArea("");
+               displayName.setPromptText("display name");
                displayName.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
            	
                displayName.setPrefWidth(250);
@@ -383,7 +388,8 @@ Button joinButton = new Button("JOIN A ROOM");
                 joinLabel.setTranslateX(322);
                 joinLabel.setTranslateY(250);
                 
-                TextArea joinArea = new TextArea("room code goes here");
+                TextArea joinArea = new TextArea();
+                joinArea.setPromptText("room code goes here");
                 joinArea.setStyle("-fx-text-fill: #897361;");
             	
                 joinArea.setPrefWidth(200);
