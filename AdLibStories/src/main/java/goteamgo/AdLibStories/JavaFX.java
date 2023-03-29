@@ -152,6 +152,7 @@ public class JavaFX extends Application {
             	
             	Label promptLabel = new Label("Prompt:");
             	promptLabel.setFont(new Font("Times New Roman", 20));
+            	promptLabel.setStyle("-fx-prompt-text-fill: derive(-fx-control-inner-background, -30%);");
             	promptLabel.setStyle("-fx-text-fill: #897361;");
             	
             	promptLabel.setTranslateX(140);
@@ -467,8 +468,19 @@ Button joinButton = new Button("JOIN A ROOM");
                 Scene createRoomScene = new Scene(createRoomGroup,900,700);
                 
                 Button previousButton = previousButton(primaryStage);
-                
-                createRoomGroup.getChildren().addAll(previousButton);
+                TextArea roomCode = new TextArea("Room Code: ");
+                roomCode.setFont(new Font("Times New Roman", 20));
+            	
+            	roomCode.setPrefWidth(450);
+            	roomCode.setPrefHeight(50);
+            	
+            	roomCode.setTranslateX(225);
+            	roomCode.setTranslateY(75);
+            	
+            	roomCode.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
+                roomCode.setEditable(false);
+            	
+                createRoomGroup.getChildren().addAll(previousButton, roomCode);
                 createRoomScene.setFill(Color.web("#FFFDD0"));
                 
                 primaryStage.setScene(createRoomScene);
