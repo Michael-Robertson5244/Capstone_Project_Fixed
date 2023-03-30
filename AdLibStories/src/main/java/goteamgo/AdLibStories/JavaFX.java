@@ -33,11 +33,14 @@ import javafx.scene.paint.Stop;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.scene.control.Alert;
 
 public class JavaFX extends Application {
 
 	StackPane stackPane = new StackPane();
 	Scene scene = new Scene(stackPane,900,700);
+	boolean loggedIn = false;
+	Player playerProfile;
 	
 	static Game game = new Game();
 	
@@ -92,6 +95,8 @@ public class JavaFX extends Application {
     	
     }
     
+    
+    //Possibly replace his with a function to view your player profile
     public Button playButton(Stage primaryStage) {
     	Button playButton = new Button("PLAY");
     	playButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
@@ -245,8 +250,38 @@ public class JavaFX extends Application {
 
 				@Override
 				public void handle(ActionEvent event) {
-					// TODO Auto-generated method stub
 					
+					String username = userName.getText();
+					String password = passWord.getText();
+					String screenName = displayName.getText();
+					
+					if(!DB.validUsername(username))
+					{
+						Alert alert = new Alert(Alert.AlertType.WARNING);
+						alert.setTitle("Error");
+						alert.setHeaderText("Account creation failed: Username in use.");
+						alert.setContentText("Please use a different username.");
+						alert.showAndWait();
+					}
+					else if(!DB.validScreenName(screenName))
+					{
+						Alert alert = new Alert(Alert.AlertType.WARNING);
+						alert.setTitle("Error");
+						alert.setHeaderText("Account creation failed: Screen name in use.");
+						alert.setContentText("Please use a different screen name.");
+						alert.showAndWait();
+					}
+					else
+					{
+						String encryptedPassword = EncryptPassword.encrypt(password);
+						DB.insertUser(username, encryptedPassword, screenName);
+						
+						Alert alert = new Alert(Alert.AlertType.WARNING);
+						alert.setTitle("Success");
+						alert.setHeaderText("Account was created successfully.");
+						alert.setContentText("Please return to the menu and login.");
+						alert.showAndWait();
+					}
 				}
             	   
                });
@@ -296,16 +331,6 @@ public class JavaFX extends Application {
             	Group loginGroup = new Group();
                 Scene loginScene = new Scene(loginGroup,900,700);
                 
-                Button loginButton = new Button("LOGIN");
-                loginButton.setStyle("-fx-background-radius: 25px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
-                
-                loginButton.setTranslateX(370);
-                loginButton.setTranslateY(500);
-                
-                loginButton.setPrefWidth(200);
-                
-                loginButton.setFont(new Font("Times New Roman", 25));
-                
                 Label loginTitle = new Label("LOGIN");
                 
                 loginTitle.setFont(new Font("Times New Roman", 50));
@@ -347,6 +372,61 @@ public class JavaFX extends Application {
             	
             	passText.setTranslateX(425);
             	passText.setTranslateY(350);
+            	
+            	//Add login button functionality
+            	Button loginButton = new Button("LOGIN");
+                loginButton.setStyle("-fx-background-radius: 25px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+                
+                loginButton.setTranslateX(370);
+                loginButton.setTranslateY(500);
+                
+                loginButton.setPrefWidth(200);
+                
+                loginButton.setFont(new Font("Times New Roman", 25));
+            	
+                loginButton.setOnAction(new EventHandler<ActionEvent>() {
+
+					@Override
+					public void handle(ActionEvent event) {
+						
+						String userName = userText.getText();
+						String passWord = passText.getText();
+						
+						System.out.println("Username: " + userName);
+						
+						if(loggedIn)
+						{
+							Alert alert = new Alert(Alert.AlertType.WARNING);
+							alert.setTitle("Error");
+							alert.setHeaderText("Already logged in.");
+							alert.setContentText("Please return to the menu.");
+							alert.showAndWait();
+						}
+						else if(DB.login(userName, passWord))
+						{
+							playerProfile = new Player(userName, DB.getDisplayName(userName));
+							
+							System.out.println("Username: " + playerProfile.getUsername() + ", DisplayName: " + playerProfile.getDisplayName());
+							
+							Alert alert = new Alert(Alert.AlertType.WARNING);
+							alert.setTitle("Success");
+							alert.setHeaderText("Login was successful.");
+							alert.setContentText("Please return to the menu.");
+							alert.showAndWait();
+							
+							setLoggedInTrue();
+						}
+						else
+						{
+							Alert alert = new Alert(Alert.AlertType.WARNING);
+							alert.setTitle("Error");
+							alert.setHeaderText("Incorrect username or password.");
+							alert.setContentText("Please try again.");
+							alert.showAndWait();
+						}
+					}
+                	
+                });
                 
                 Button previousButton = previousButton(primaryStage);
                 
@@ -454,6 +534,15 @@ Button joinButton = new Button("JOIN A ROOM");
     }
     
     public Button createButton(Stage primaryStage) {
+    	
+    	Label createRoomLabel = new Label("ROOM CODE:");
+        
+        createRoomLabel.setFont(new Font("Times New Roman", 34));
+        createRoomLabel.setStyle("-fx-text-fill: #897361;");
+        
+        createRoomLabel.setTranslateX(80);
+        createRoomLabel.setTranslateY(150);
+    	
     	Button createButton = new Button("CREATE A ROOM");
         
     	createButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
@@ -468,19 +557,19 @@ Button joinButton = new Button("JOIN A ROOM");
                 Scene createRoomScene = new Scene(createRoomGroup,900,700);
                 
                 Button previousButton = previousButton(primaryStage);
-                TextArea roomCode = new TextArea("Room Code: ");
+                TextArea roomCode = new TextArea("");
                 roomCode.setFont(new Font("Times New Roman", 20));
             	
             	roomCode.setPrefWidth(450);
             	roomCode.setPrefHeight(50);
             	
-            	roomCode.setTranslateX(225);
-            	roomCode.setTranslateY(75);
+            	roomCode.setTranslateX(300);
+            	roomCode.setTranslateY(145);
             	
             	roomCode.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
-                roomCode.setEditable(false);
+                roomCode.setEditable(true);
             	
-                createRoomGroup.getChildren().addAll(previousButton, roomCode);
+                createRoomGroup.getChildren().addAll(createRoomLabel, previousButton, roomCode);
                 createRoomScene.setFill(Color.web("#FFFDD0"));
                 
                 primaryStage.setScene(createRoomScene);
@@ -488,6 +577,11 @@ Button joinButton = new Button("JOIN A ROOM");
             }
         });
     	return createButton;
+    }
+    
+    
+    public void setLoggedInTrue() {
+    	this.loggedIn = true;
     }
     
     public static void main(String[] args) {
