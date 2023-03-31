@@ -66,7 +66,7 @@ public class JavaFX extends Application {
         Button joinButton = joinButton(primaryStage);
         Button loginButton = loginButton(primaryStage);
         Button createAccountButton = createAccountButton(primaryStage);
-        Button playButton = playButton(primaryStage);
+        Button profileButton = profileButton(primaryStage);
        
         
         imageView.setTranslateY(-150);
@@ -74,11 +74,11 @@ public class JavaFX extends Application {
         createButton.setTranslateY(90);
         loginButton.setTranslateY(40);
         createAccountButton.setTranslateY(-10);
-        playButton.setTranslateY(190);
+        profileButton.setTranslateY(190);
 
         // Create a stack pane to center the buttons in the middle of the screen
        
-        stackPane = new StackPane(createButton, joinButton, loginButton, createAccountButton, playButton, imageView);
+        stackPane = new StackPane(createButton, joinButton, loginButton, createAccountButton, profileButton, imageView);
         stackPane.setBackground(new Background(new BackgroundFill(Color.web("#FFFDD0"), CornerRadii.EMPTY, Insets.EMPTY)));
 
         stackPane.setAlignment(Pos.CENTER);
@@ -575,7 +575,11 @@ Button joinButton = new Button("JOIN A ROOM");
             	roomCode.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
                 roomCode.setEditable(true);
             	
-                createRoomGroup.getChildren().addAll(createRoomLabel, previousButton, roomCode);
+                Button playButton = playButton(primaryStage);
+                playButton.setTranslateY(550);
+                playButton.setTranslateX(300);
+                
+                createRoomGroup.getChildren().addAll(createRoomLabel, previousButton, roomCode,playButton);
                 createRoomScene.setFill(Color.web("#FFFDD0"));
                 
                 primaryStage.setScene(createRoomScene);
@@ -585,6 +589,31 @@ Button joinButton = new Button("JOIN A ROOM");
     	return createButton;
     }
     
+    public Button profileButton(Stage primaryStage) {
+    	Button profileButton = new Button("PROFILE");
+    	profileButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+    	profileButton.setFont(new Font("Times New Roman", 20));
+    	profileButton.setPrefWidth(250);
+    	
+    	profileButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                // TODO: Add logic for creating a room
+            	Group profileGroup = new Group();
+                Scene profileScene = new Scene(profileGroup,900,700);
+                
+                Button previousButton = previousButton(primaryStage);
+
+                profileGroup.getChildren().addAll(previousButton);
+                profileScene.setFill(Color.web("#FFFDD0"));
+                
+                primaryStage.setScene(profileScene);
+                primaryStage.show();
+            }
+        });
+    	
+    	return profileButton;
+    }
     
     public void setLoggedInTrue() {
     	this.loggedIn = true;
