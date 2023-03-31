@@ -222,7 +222,7 @@ public class JavaFX extends Application {
                userName.setTranslateX(325);
                userName.setTranslateY(275);
            	
-               TextArea passWord = new TextArea();
+               PasswordField passWord = new PasswordField();
                passWord.setPromptText("password");
                passWord.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
            	
@@ -369,7 +369,7 @@ public class JavaFX extends Application {
                 password.setTranslateX(250);
                 password.setTranslateY(365);
                 
-                TextArea passText = new TextArea();
+                PasswordField passText = new PasswordField();
                 passText.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
             	
                 passText.setPrefWidth(250);
