@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class Game {
 
 	int numRounds = 5;
-	int turnTracker = 0;
+	int turnTracker = 1;
 	boolean gameOver = false;
 	String prompt;
 	ArrayList<String> story = new ArrayList<String>();

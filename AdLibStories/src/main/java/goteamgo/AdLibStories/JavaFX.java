@@ -491,19 +491,36 @@ Button joinButton = new Button("JOIN A ROOM");
 
 					@Override
 					public void handle(ActionEvent event) {
-						// TODO Auto-generated method stub
 						
 						Group joinButtonGroup = new Group();
 						Scene joinButtonScene = new Scene(joinButtonGroup, 900, 700);
 						
-						TextArea roomCode = new TextArea("room code here");
+						Label passwordLabel = new Label("Enter Room Password:");
+		                passwordLabel.setFont(new Font("Times New Roman", 30));
+		                passwordLabel.setStyle("-fx-text-fill: #897361;");
+		                
+		                passwordLabel.setTranslateX(300);
+		                passwordLabel.setTranslateY(275);
+						
+						TextArea roomCode = new TextArea();
+						roomCode.setPromptText("Room Password");
+						roomCode.setStyle("-fx-text-fill: #897361;");
+		            	
+						roomCode.setPrefWidth(200);
+						roomCode.setPrefHeight(40);
+						
+						roomCode.setTranslateX(335);
+						roomCode.setTranslateY(350);
 						
 						Button play = new Button("PLAY");
-						play.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
-		               
-		                play.setTranslateX(830);
-		                play.setTranslateY(650);
+						play.setStyle("-fx-background-radius: 25px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+		                play.setFont(new Font("Times New Roman", 20));
 		                
+		                play.setPrefWidth(200);
+		                
+		                play.setTranslateX(335);
+		                play.setTranslateY(430);
+		               
 		                play.setOnAction(new EventHandler<ActionEvent>() {
 
 							@Override
@@ -514,9 +531,16 @@ Button joinButton = new Button("JOIN A ROOM");
 		                	
 		                });
 		                
+		                //Button to return to the main page from the enter a code line after clicking join room.
+		                Button previousButton2 = previousButton(primaryStage);
+		                previousButton2.setText("HOME");
+		                previousButton2.setTranslateX(800);
+		                previousButton2.setTranslateY(650);
+		                
 						joinButtonScene.setFill(Color.web("#FFFDD0"));
 						
-						joinButtonGroup.getChildren().addAll(roomCode, play);
+						
+						joinButtonGroup.getChildren().addAll(passwordLabel, roomCode, play, previousButton2);
 						
 						primaryStage.setScene(joinButtonScene);
 						primaryStage.show();
