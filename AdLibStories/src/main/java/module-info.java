@@ -9,4 +9,5 @@ module AdLibStories {
 	requires org.mongodb.driver.core;
 	requires org.mongodb.driver.sync.client;
 	requires stanford.corenlp;
+	
 }
