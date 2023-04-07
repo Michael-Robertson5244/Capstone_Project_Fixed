@@ -21,6 +21,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -146,9 +147,21 @@ public class JavaFX extends Application {
             	promptText.setEditable(false);
             	
             	TextArea storyEntryTextArea = new TextArea();
+            	storyEntryTextArea.setOnKeyPressed(event ->{
+            		
+            		if(event.getCode() == KeyCode.SPACE) {
+            			 String currentText = storyEntryTextArea.getText();
+            			 String[] words = currentText.split(" ");
+            			 String lastWord = words[words.length - 1];
+
+            			 System.out.println("Last word: " + lastWord);
+            		}
+            	});
+            	
             	storyEntryTextArea.setPromptText("Write your Story here");
             	storyEntryTextArea.setFont(new Font("Times New Roman", 20));
             	storyEntryTextArea.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
+            	storyEntryTextArea.setWrapText(true);
             	
             	storyEntryTextArea.setPrefWidth(450);
             	storyEntryTextArea.setPrefHeight(50);
