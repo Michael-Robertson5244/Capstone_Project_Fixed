@@ -5,6 +5,7 @@ import java.awt.TextField;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.Locale;
 
 import javax.swing.JScrollPane;
 
@@ -36,13 +37,15 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.control.Alert;
 
+
 public class JavaFX extends Application {
 
 	StackPane stackPane = new StackPane();
 	Scene scene = new Scene(stackPane,900,700);
 	boolean loggedIn = false;
 	Player playerProfile;
-	
+	//SpellChecker spellchecker = profile.spellChecker();
+			
 	static Game game = new Game();
 	
     @Override
@@ -147,6 +150,7 @@ public class JavaFX extends Application {
             	promptText.setEditable(false);
             	
             	TextArea storyEntryTextArea = new TextArea();
+            	//spellchecker.setsetUserDictionaryProvider(null);
             	storyEntryTextArea.setOnKeyPressed(event ->{
             		
             		if(event.getCode() == KeyCode.SPACE) {
