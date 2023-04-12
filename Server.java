@@ -10,6 +10,7 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.awt.Color;
+import java.net.InetAddress;
 
 public class Server {
 
@@ -27,12 +28,15 @@ public class Server {
   }
 
   public void run() throws IOException {
-    server = new ServerSocket(port) {
+	  InetAddress localhost = InetAddress.getLocalHost();
+    server = new ServerSocket(port, 1, localhost) {
       protected void finalize() throws IOException {
         this.close();
       }
     };
     System.out.println("Port 12345 is now open.");
+    System.out.println(server.getInetAddress().getHostAddress());
+    System.out.println(server.getLocalPort());
 
     while (true) {
       // accepts a new client
