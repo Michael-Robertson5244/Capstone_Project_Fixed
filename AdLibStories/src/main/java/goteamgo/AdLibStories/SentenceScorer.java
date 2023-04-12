@@ -34,7 +34,7 @@ public class SentenceScorer {
         return adjScore + wordScore + readScore;
     }
     
-    private int countAdjectives(String sentence) {
+    public int countAdjectives(String sentence) {
         int count = 0;        
         Properties props = new Properties();
         props.setProperty("annotators", "tokenize, ssplit, pos");
@@ -51,7 +51,7 @@ public class SentenceScorer {
         return count;
     }
     
-    private boolean containsTargetWord(String sentence) {
+    public boolean containsTargetWord(String sentence) {
         return sentence.toLowerCase().contains(targetWord.toLowerCase());
     }
     
