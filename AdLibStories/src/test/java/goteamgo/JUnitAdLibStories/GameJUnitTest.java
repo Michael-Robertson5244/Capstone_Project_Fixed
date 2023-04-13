@@ -149,6 +149,8 @@ public class GameJUnitTest {
 	//tests count syllable method
 	//natural language processing is hard, I'm giving each sentence a range of 3 above and 3 below of the syllables that I count.
 	//If the number of syllables counted by the function is in range (a total of range 7), then it is accepted
+	//if 3 below the syllable count is less than the number of words, then the lowest number will be the number of words in the sentence
+	//It is not possible to have less syllables than words
 	@Test
 	public void testCountSyllables() {
 		SentenceScorer score = new SentenceScorer("Java");
@@ -159,11 +161,11 @@ public class GameJUnitTest {
 		
 		testSentence = "My friend Jenna got new, red shoes for her birthday.";
 		
-		assertTrue(9 <= score.countSyllables(testSentence) && score.countSyllables(testSentence) <= 15);
+		assertTrue(10 <= score.countSyllables(testSentence) && score.countSyllables(testSentence) <= 15);
 	
 		testSentence = "I'm going to the store.";
 		
-		assertTrue(2 <= score.countSyllables(testSentence) && score.countSyllables(testSentence) <= 8);
+		assertTrue(5 <= score.countSyllables(testSentence) && score.countSyllables(testSentence) <= 8);
 		
 		testSentence = "Big, stinky, cute, red, ugly, adorable.";
 		
@@ -215,6 +217,30 @@ public class GameJUnitTest {
 	//tests the getReadabilityScore() method in sentence scorer
 	@Test
 	public void testReadabilityScore() {
+		//0.39 * (words / (double) sentences) + 11.8 * (syllables / (double) words) - 15.59
+		SentenceScorer score = new SentenceScorer("Readability");
+		String testSentence = "These are delicious, huge, round cookies.";
+		//words = 6 sentences = 1 syllables = 6-12
+		//check in a range from 6 syllables - 12 syllables
+		
+		assertTrue(-1.45 <= score.getReadabilityScore(testSentence) &&  score.getReadabilityScore(testSentence) <= 10.35 );
+	
+		testSentence = "My friend Jenna got new, red shoes for her birthday.";
+		//words = 10 sentencces = 1 syllables = 10-15
+		//check in a range from 10 syllables - 15 syllables
+		
+		assertTrue(0.11 <= score.getReadabilityScore(testSentence) &&  score.getReadabilityScore(testSentence) <= 6.01);
+		
+		testSentence = "I'm going to the store.";
+		//words = 5 sentence = 1 syllables = 5-8
+		//check in a range from 5 syllables - 8 syllables
+		assertTrue(-1.84 <= score.getReadabilityScore(testSentence) &&  score.getReadabilityScore(testSentence) <= 5.24 );
+		
+		testSentence = "I.am.a.sentence.or.am.I.8?";
+		//words = 8 sentences=8 syllables = 8-12
+		//check in a range from 8 syllables - 12 syllables
+		assertTrue( -3.4 <= score.getReadabilityScore(testSentence) &&  score.getReadabilityScore(testSentence) <=  2.5);
+
 		
 	}
 	

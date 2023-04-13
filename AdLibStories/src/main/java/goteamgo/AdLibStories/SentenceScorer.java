@@ -94,7 +94,8 @@ public class SentenceScorer {
         for (String word : wordList) {
             syllables += countSyllables(word);
         }
-        double score = 0.39 * (words / (double) sentences) + 11.8 * (syllables / (double) words) - 15.59;
+        System.out.println(words + ":" + sentences + ":" + syllables);
+        double score = (0.39 * (words / (double) sentences)) + (11.8 * (syllables / (double) words)) - (15.59);
         System.out.println(score);
         return score;
     }
