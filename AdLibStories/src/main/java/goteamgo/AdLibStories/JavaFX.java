@@ -295,8 +295,7 @@ public class JavaFX extends Application {
 					}
 					else
 					{
-						String encryptedPassword = PasswordHasher.encrypt(password);
-						DB.insertUser(username, encryptedPassword, screenName);
+						DB.insertUser(username, password, screenName);
 						
 						Alert alert = new Alert(Alert.AlertType.WARNING);
 						alert.setTitle("Success");

@@ -4,7 +4,6 @@ import java.util.Properties;
 import edu.stanford.nlp.pipeline.*;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
-import edu.stanford.nlp.util.*;
 
 /*
 Java class that takes in a sentence and returns a score based on the length, 
@@ -103,9 +102,10 @@ public class SentenceScorer {
     }
     
     	public static void main(String[] args) {
+    	/*Testing Code
 		SentenceScorer scorer = new SentenceScorer("space"); // "java" is the keyword for points
         String sentence = "At space be when greatest for him, expected we on with did and to had value hall.";
         double score = scorer.score(sentence);
-        System.out.println(score); // Output: 11.92
+        System.out.println(score); // Output: 11.92*/
 	}
 }
