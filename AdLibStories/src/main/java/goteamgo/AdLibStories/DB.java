@@ -121,10 +121,10 @@ public class DB {
         
 		if(user != null)
 		{
-			String encryptedPassword = EncryptPassword.encrypt(password);
+			String encryptedPassword = PasswordHasher.encrypt(password);
 			String storedPassword = user.getString("EPassword");
 			
-			if(encryptedPassword.equals(storedPassword))
+			if(PasswordHasher.checkPassword(storedPassword, encryptedPassword))
 			{
 				System.out.println("Passwords matched.");
 				return true;
