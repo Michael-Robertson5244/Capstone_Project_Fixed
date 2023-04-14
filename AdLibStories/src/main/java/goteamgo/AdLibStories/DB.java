@@ -13,6 +13,8 @@ import java.security.SecureRandom;
 
 public class DB {
 	
+    static SecureRandom rand;
+	
     public static void main(String[] args) {  	    	
     	
     	//Testing Code Should return true
@@ -162,12 +164,12 @@ public class DB {
 		Document user = collection.find(new Document("Username", username)).first();
 		
 		displayName = user.getString("DisplayName");
-		
+
 		return displayName;
 	}
 	
     public static String encrypt(String password) {
-        SecureRandom rand = new SecureRandom();
+        rand = new SecureRandom();
         char pepper = (char) (rand.nextInt(12)); 
         String salt = BCrypt.gensalt(12);
         return BCrypt.hashpw(password+pepper, salt);
