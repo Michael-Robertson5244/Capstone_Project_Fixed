@@ -30,7 +30,6 @@ public class SentenceScorer {
         double adjScore = countAdjectives(sentence) * 2.0; // Reward sentences with more adjectives
         double wordScore = containsTargetWord(sentence) ? 5.0 : 0.0; // Reward sentences that contain a specific word
         double readScore = getReadabilityScore(sentence); // Calculate readability score
-        
         return adjScore + wordScore + readScore;
     }
     
@@ -94,7 +93,6 @@ public class SentenceScorer {
         for (String word : wordList) {
             syllables += countSyllables(word);
         }
-        System.out.println(words + ":" + sentences + ":" + syllables);
         double score = (0.39 * (words / (double) sentences)) + (11.8 * (syllables / (double) words)) - (15.59);
         System.out.println(score);
         return score;

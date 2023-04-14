@@ -58,30 +58,75 @@ public class GameJUnitTest {
 	@Test
 	public void testExistingScreenName() {
 		DB db = new DB();
+		String screenName = "BigMommyEd";
+		assertFalse(db.validScreenName(screenName));
 		
+		screenName = "YaBoiMichael5244";
+		assertFalse(db.validScreenName(screenName));
+		
+		screenName = "tia3";
+		assertFalse(db.validScreenName(screenName));
 		
 	}
 	//test an already existing userName
 	@Test
 	public void testExistingUserName(){
+		DB db = new DB();
+		String username = "BigMommyEd";
+		assertFalse(db.validUsername(username));
 		
+		username = "Michael5244";
+		assertFalse(db.validUsername(username));
+		
+		username = "tiasharpe";
+		assertFalse(db.validUsername(username));
+		
+	
 	}
 	
 	//test full register of a non existing profile
+	//MUST DELETE TEST USER FROM MONGODB AFTER RUNNING THIS TEST
 	@Test
 	public void testRegisterNonExisting() {
 		DB db = new DB();
+		String username = "testUser";
+		String password = "testPassword";
+		String displayName = "testDisplay";
+		EncryptPassword encrypt = new EncryptPassword();
+		String encryptedPass = encrypt.encrypt(password);
 		
+		assertTrue(db.validUsername(username));
+		assertTrue(db.validScreenName(displayName));
+		
+		db.insertUser(username,encryptedPass,displayName);
+		
+		assertFalse(db.validUsername(username));
+		assertFalse(db.validScreenName(displayName));
 	}
 	
 	//test login success
+	//MUST DELETE TEST USER FROM MONGODB WHEN RUNNING
 	@Test
 	public void testLoginSuccess() {
+		DB db = new DB();
+		String username = "testUser2";
+		String password = "testPassword";
+		String displayName = "testDisplay2";
+		EncryptPassword encrypt = new EncryptPassword();
+		String encryptedPass = encrypt.encrypt(password);
+		db.insertUser(username,encryptedPass,displayName);
+		
+		assertTrue(db.login(username, password));
 		
 	}
 	//test login fail
 	@Test
 	public void testLoginFail() {
+		DB db = new DB();
+		String username = "username";
+		String password = "password";
+		
+		assertFalse(db.login(username, password));
 		
 	}
 	//test password encryption
@@ -226,7 +271,7 @@ public class GameJUnitTest {
 		assertTrue(-1.45 <= score.getReadabilityScore(testSentence) &&  score.getReadabilityScore(testSentence) <= 10.35 );
 	
 		testSentence = "My friend Jenna got new, red shoes for her birthday.";
-		//words = 10 sentencces = 1 syllables = 10-15
+		//words = 10 sentences = 1 syllables = 10-15
 		//check in a range from 10 syllables - 15 syllables
 		
 		assertTrue(0.11 <= score.getReadabilityScore(testSentence) &&  score.getReadabilityScore(testSentence) <= 6.01);
@@ -236,10 +281,10 @@ public class GameJUnitTest {
 		//check in a range from 5 syllables - 8 syllables
 		assertTrue(-1.84 <= score.getReadabilityScore(testSentence) &&  score.getReadabilityScore(testSentence) <= 5.24 );
 		
-		testSentence = "I.am.a.sentence.or.am.I.8?";
-		//words = 8 sentences=8 syllables = 8-12
-		//check in a range from 8 syllables - 12 syllables
-		assertTrue( -3.4 <= score.getReadabilityScore(testSentence) &&  score.getReadabilityScore(testSentence) <=  2.5);
+		testSentence = "I am going to the store. I need to pick up some milk.";
+		//words = 13 sentences=2 syllables = 13-17
+		//check in a range from 13 syllables - 17 syllables
+		assertTrue( -1.255 <= score.getReadabilityScore(testSentence) &&  score.getReadabilityScore(testSentence) <=  2.3756);
 
 		
 	}
@@ -248,6 +293,19 @@ public class GameJUnitTest {
 	@Test
 	public void testSentenceScorer() {
 		
+		SentenceScorer score = new SentenceScorer("cookies");
+		String testSentence = "These are delicious, huge, round cookies.";
+		//Adjectives = 3, readabilityScore = -1.45 - 10.35, has target word
+		assertTrue(9.55 <= score.score(testSentence) &&  score.score(testSentence) <= 21.35 );
+		
+		testSentence = "My friend Jenna got new, red shoes for her birthday.";
+		//Adjectives = 2, readabilityScore = 0.11 - 6.01, does not have target word
+		assertTrue(4.11 <= score.score(testSentence) &&  score.score(testSentence) <= 10.01 );
+	
+		testSentence = "I'm going to the store.";
+		//Adjectives = 0, readabilityScore = -1.84 - 5.24, does not have target word
+		assertTrue(-1.84 <= score.score(testSentence) &&  score.score(testSentence) <= 5.24 );
+
 	}
 	
 	
