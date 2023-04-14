@@ -49,6 +49,11 @@
 	    <artifactId>stanford-corenlp</artifactId>
 	    <version>4.5.3</version>
 	</dependency>
+	<dependency>
+    <groupId>org.mindrot</groupId>
+    <artifactId>jbcrypt</artifactId>
+    <version>0.4</version>
+</dependency>
   	</dependencies>
   
   <build>
