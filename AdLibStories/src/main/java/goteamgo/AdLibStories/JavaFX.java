@@ -796,7 +796,7 @@ public class JavaFX extends Application {
             	playerUsername.setPrefHeight(50);
              	
             	playerUsername.setTranslateX(250);
-            	playerUsername.setTranslateY(320);
+            	playerUsername.setTranslateY(200);
              	
             	Label playerDisplay = new Label("Display Name:");
             	
@@ -807,18 +807,18 @@ public class JavaFX extends Application {
             	playerDisplay.setPrefHeight(50);
              	
             	playerDisplay.setTranslateX(200);
-            	playerDisplay.setTranslateY(420);
+            	playerDisplay.setTranslateY(300);
             	
             	TextArea playerUsernameText = new TextArea();
             	
-            	playerUsernameText.setFont(new Font("Times New Roman", 34));
+            	playerUsernameText.setFont(new Font("Times New Roman", 20));
             	playerUsernameText.setStyle("-fx-text-fill: #897361;");
             	
-            	playerUsernameText.setPrefWidth(300);
+            	playerUsernameText.setPrefWidth(150);
             	playerUsernameText.setPrefHeight(playerUsernameText.getFont().getSize() * 2);
              	
             	playerUsernameText.setTranslateX(450);
-            	playerUsernameText.setTranslateY(300);
+            	playerUsernameText.setTranslateY(200);
             	
             	playerUsernameText.setEditable(false);
             	
@@ -826,14 +826,14 @@ public class JavaFX extends Application {
             	
             	TextArea playerDisplayText = new TextArea();
             	
-            	playerDisplayText.setFont(new Font("Times New Roman", 34));
+            	playerDisplayText.setFont(new Font("Times New Roman", 20));
             	playerDisplayText.setStyle("-fx-text-fill: #897361;");
             	
-            	playerDisplayText.setPrefWidth(300);
+            	playerDisplayText.setPrefWidth(150);
             	playerDisplayText.setPrefHeight(playerDisplayText.getFont().getSize() * 2);
              	
             	playerDisplayText.setTranslateX(450);
-            	playerDisplayText.setTranslateY(400);
+            	playerDisplayText.setTranslateY(300);
             	
             	playerDisplayText.setEditable(false);
             	
