@@ -43,6 +43,7 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.scene.control.Alert;
 
@@ -788,35 +789,55 @@ public class JavaFX extends Application {
             	
             	Label playerUsername = new Label("Username:");
             	
+            	playerUsername.setFont(new Font("Times New Roman", 34));
+            	playerUsername.setStyle("-fx-text-fill: #897361;");
+              
             	playerUsername.setPrefWidth(250);
             	playerUsername.setPrefHeight(50);
              	
-            	playerUsername.setTranslateX(150);
-            	playerUsername.setTranslateY(200);
+            	playerUsername.setTranslateX(250);
+            	playerUsername.setTranslateY(320);
              	
             	Label playerDisplay = new Label("Display Name:");
             	
+            	playerDisplay.setFont(new Font("Times New Roman", 34));
+            	playerDisplay.setStyle("-fx-text-fill: #897361;");
+                
             	playerDisplay.setPrefWidth(250);
             	playerDisplay.setPrefHeight(50);
              	
-            	playerDisplay.setTranslateX(150);
-            	playerDisplay.setTranslateY(250);
+            	playerDisplay.setTranslateX(200);
+            	playerDisplay.setTranslateY(420);
             	
             	TextArea playerUsernameText = new TextArea();
             	
-            	playerUsernameText.setPrefWidth(150);
-            	playerUsernameText.setPrefHeight(50);
+            	playerUsernameText.setFont(new Font("Times New Roman", 34));
+            	playerUsernameText.setStyle("-fx-text-fill: #897361;");
+            	
+            	playerUsernameText.setPrefWidth(300);
+            	playerUsernameText.setPrefHeight(playerUsernameText.getFont().getSize() * 2);
              	
-            	playerUsernameText.setTranslateX(250);
-            	playerUsernameText.setTranslateY(200);
+            	playerUsernameText.setTranslateX(450);
+            	playerUsernameText.setTranslateY(300);
+            	
+            	playerUsernameText.setEditable(false);
+            	
+            	playerUsernameText.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
             	
             	TextArea playerDisplayText = new TextArea();
             	
-            	playerDisplayText.setPrefWidth(150);
-            	playerDisplayText.setPrefHeight(50);
+            	playerDisplayText.setFont(new Font("Times New Roman", 34));
+            	playerDisplayText.setStyle("-fx-text-fill: #897361;");
+            	
+            	playerDisplayText.setPrefWidth(300);
+            	playerDisplayText.setPrefHeight(playerDisplayText.getFont().getSize() * 2);
              	
-            	playerDisplayText.setTranslateX(250);
-            	playerDisplayText.setTranslateY(250);
+            	playerDisplayText.setTranslateX(450);
+            	playerDisplayText.setTranslateY(400);
+            	
+            	playerDisplayText.setEditable(false);
+            	
+            	playerDisplayText.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
             	
             	playerUsernameText.setText(playerProfile.getUsername());
             	playerDisplayText.setText(playerProfile.getDisplayName());
