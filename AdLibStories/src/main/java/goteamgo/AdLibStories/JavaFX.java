@@ -219,6 +219,8 @@ public class JavaFX extends Application {
     	promptLabel.setTranslateX(140);
     	promptLabel.setTranslateY(85);
     	
+    	Button previousButton = previousButton(primaryStage);
+    	
       previousButton.setOnMouseEntered(event -> {
             	    previousButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #EFA565; -fx-background-color: #897361;");
             	});
