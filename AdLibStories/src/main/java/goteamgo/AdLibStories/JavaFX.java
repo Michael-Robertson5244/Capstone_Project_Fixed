@@ -219,13 +219,7 @@ public class JavaFX extends Application {
     	promptLabel.setTranslateX(140);
     	promptLabel.setTranslateY(85);
     	
-      previousButton.setOnMouseEntered(event -> {
-            	    previousButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #EFA565; -fx-background-color: #897361;");
-            	});
-            	
-            	previousButton.setOnMouseExited(event -> {
-            	    previousButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
-            	});
+    	Button previousButton = previousButton(primaryStage);
         
         playGroup.getChildren().addAll(previousButton, promptText, promptLabel, storyTextArea, storyEntryTextArea, playerNames);
         playScene.setFill(Color.web("#FFFDD0"));
@@ -239,6 +233,8 @@ public class JavaFX extends Application {
     	Button playButton = new Button("PLAY");
     	playButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
 		playButton.setFont(new Font("Times New Roman", 20));
+		
+		playButton.setTranslateX(450);
 		playButton.setPrefWidth(250);
 		
 		playButton.setOnMouseEntered(event -> {
@@ -694,13 +690,13 @@ public class JavaFX extends Application {
     
     public Button createButton(Stage primaryStage) {
     	
-    	Label createRoomLabel = new Label("Num Players (6 at most):");
+    	Label createRoomLabel = new Label("Enter the Number of Players (6 at most):");
         
         createRoomLabel.setFont(new Font("Times New Roman", 30));
         createRoomLabel.setStyle("-fx-text-fill: #897361;");
         
-        createRoomLabel.setTranslateX(80);
-        createRoomLabel.setTranslateY(350);
+        createRoomLabel.setTranslateX(200);
+        createRoomLabel.setTranslateY(250);
     	
         //Will create the server.
     	Button createButton = new Button("CREATE A ROOM");
@@ -732,11 +728,11 @@ public class JavaFX extends Application {
                 TextArea numPlayers = new TextArea("");
                 numPlayers.setFont(new Font("Times New Roman", 20));
             	
-            	numPlayers.setPrefWidth(40);
+            	numPlayers.setPrefWidth(250);
             	numPlayers.setPrefHeight(30);
             	
-            	numPlayers.setTranslateX(400);
-            	numPlayers.setTranslateY(345);
+            	numPlayers.setTranslateX(320);
+            	numPlayers.setTranslateY(350);
             	
             	numPlayers.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
                 numPlayers.setEditable(true);
@@ -744,7 +740,7 @@ public class JavaFX extends Application {
                 //Need to change it so that it will handle more than one person and keep track of turns.
                 Button playButton = playButton(primaryStage, numPlayers);
                 playButton.setTranslateY(550);
-                playButton.setTranslateX(300);
+                playButton.setTranslateX(320);
                 
                 createRoomGroup.getChildren().addAll(createRoomLabel, numPlayers, previousButton, playButton);
                 createRoomScene.setFill(Color.web("#FFFDD0"));
