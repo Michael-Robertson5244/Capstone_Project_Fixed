@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -14,35 +15,44 @@ import java.util.regex.Matcher;
 import java.awt.Color;
 import java.net.InetAddress;
 
-public class Server {
+public class Server implements Runnable{
 
 	private int numPlayers = 1;
 	private int maxPlayers;
 	private int port;
-	//private List<User> clients;
+	private List<User> clients;
 	private List<Player> players;
 	private ServerSocket server;
 
-	public static void main(String[] args) throws IOException {
+	/*public static void main(String[] args) throws IOException {
 		new Server(60564, 4).run();
-	}
+	}*/
 
 	public Server(int port, int maxPlayers) {
 		this.port = port;
 		this.maxPlayers = maxPlayers;
 		this.players = new ArrayList<Player>();
-		//this.clients = new ArrayList<User>();
 	}
 
-	public void run() throws IOException {
+	public void run() {
 		
-		InetAddress localhost = InetAddress.getLocalHost();
+		InetAddress localhost;
+		try {
+			localhost = InetAddress.getLocalHost();
+			
+			server = new ServerSocket(port, 1, localhost) {
+				protected void finalize() throws IOException {
+					this.close();
+				}
+			};
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		server = new ServerSocket(port, 1, localhost) {
-			protected void finalize() throws IOException {
-				this.close();
-			}
-		};
 		
 		System.out.println("Port 60564 is now open.");
 		System.out.println(server.getInetAddress().getHostAddress());
@@ -53,7 +63,12 @@ public class Server {
 			// accepts a new client
 			if(numPlayers < maxPlayers)
 			{
-				Socket client = server.accept();
+				try {
+					Socket client = server.accept();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
 				//Receive the player from the newly joined client and add it to list of players
 				
@@ -84,7 +99,7 @@ public class Server {
 			*/
 
 				// create a new thread for newUser incoming messages handling
-				new Thread(new UserHandler(this, newUser)).start();
+				new Thread(new UserHandler(this)).start();
 			}
 		}
   }
@@ -101,7 +116,7 @@ public class Server {
 		}
 	}
 
-	// send list of clients to all Users
+	// Will be used to send the list of players to each client
 	public void broadcastAllUsers(){
 		for (User client : this.clients) {
 			client.getOutStream().println(this.clients);
@@ -129,9 +144,9 @@ class UserHandler implements Runnable {
 	private Server server;
 	private User user;
 
-	public UserHandler(Server server, User user) {
+	public UserHandler(Server server) {
 		this.server = server;
-		this.user = user;
+		//this.user = user;
 		this.server.broadcastAllUsers();
   }
 
@@ -239,4 +254,5 @@ class User {
 		return "<u><span style='color:"+ this.color +"'>" + this.getNickname() + "</span></u>";
 
 	}
+}
 }

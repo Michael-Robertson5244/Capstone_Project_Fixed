@@ -21,6 +21,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
+import goteamgo.AdLibStories.Server.UserHandler;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -182,6 +183,9 @@ public class JavaFX extends Application {
             		
             		public void handle(ActionEvent actionEvent) {
             		
+            			//TODO: Check if it is the players turn. If not then do nothing
+            			
+            			//TODO: If players turn take the text and send it to the server and update all users
             			String textFromArea = storyEntryTextArea.getText();
             			System.out.println("Submitted text: " + textFromArea);
             			storyTextArea.appendText(textFromArea + "\n");
@@ -229,14 +233,13 @@ public class JavaFX extends Application {
             	    previousButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
             	});
         
-        playGroup.getChildren().addAll(previousButton, promptText, promptLabel, storyTextArea, storyEntryTextArea, playerNames);
+        playGroup.getChildren().addAll(previousButton, submitButton, promptText, promptLabel, storyTextArea, storyEntryTextArea, playerNames);
         playScene.setFill(Color.web("#FFFDD0"));
         
         primaryStage.setScene(playScene);
         primaryStage.show();
     }
 
-    //Possibly do not need this
     public Button playButton(Stage primaryStage, TextArea numPlayers) {
     	Button playButton = new Button("PLAY");
     	playButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
@@ -259,18 +262,18 @@ public class JavaFX extends Application {
             	
             	if(players > 6 || players < 2)
             	{
-            		//popup saying too many players
+            		//pop up saying too many players
             	}
             	else
             	{
             		//TODO: Send number of players to server
-            		/*server = new Server(portNo, players);
-            		try {
-						//server.run();
-					} catch (IOException e1) {
-						// TODO Error to start server
-						e1.printStackTrace();
-					}*/
+            		//Starts the new server
+            		server = new Server(portNo, players);
+            		new Thread(server).start();
+            		
+            		
+            		//TODO: Connect the host to the server.
+            		
             		
             		//Display the game screen
             		playGame(primaryStage);
@@ -281,6 +284,7 @@ public class JavaFX extends Application {
         });
         return playButton;
     }
+    
     
     public Button createAccountButton(Stage primaryStage) {
     	Button createAccountButton = new Button("CREATE AN ACCOUNT");
@@ -863,7 +867,6 @@ public class JavaFX extends Application {
     public void setLoggedInTrue() {
     	this.loggedIn = true;
     }
-    
     
     public void joinServer(int IP) {
     	
