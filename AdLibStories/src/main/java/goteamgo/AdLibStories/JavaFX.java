@@ -4,10 +4,20 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import javafx.scene.image.WritableImage;
+
 import java.net.Socket;
+import java.util.List;
+import javafx.collections.ObservableList;
+import javafx.scene.control.ListView;
+import javafx.scene.layout.VBox;
+import javafx.collections.FXCollections;
+
+import java.util.ArrayList;
 import java.net.UnknownHostException;
 
 import javafx.application.Application;
+import javafx.scene.text.Text;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -88,7 +98,7 @@ public class JavaFX extends Application {
 
 		primaryStage.setScene(scene);
 		scene.setFill(Color.web("#FFFDD0"));
-		primaryStage.setTitle("Room GUI");
+		primaryStage.setTitle("AdlibStories");
 		primaryStage.show();
 	}
 
@@ -99,14 +109,26 @@ public class JavaFX extends Application {
 
 
 		InputStream playerIconStream;
+		
 		Image playerIcon;
 		ImageView thisPlayer;
+		
+		InputStream rectangleStream;
+		
+		Image rectangle;
+		ImageView rectangleView;
 
 		try {
 
 			playerIconStream = new FileInputStream("currentUserIcon.png");
 
 			playerIcon = new Image(playerIconStream);
+			
+			rectangleStream = new FileInputStream("rectangle.png");
+			
+			rectangle = new Image(rectangleStream);
+			
+			WritableImage rect = new WritableImage((int) rectangle.getWidth(), (int) rectangle.getHeight());
 			
 			//int numPlayersInGame = Integer.parseInt(numPlayersTextArea.getText());
 
@@ -128,7 +150,24 @@ public class JavaFX extends Application {
 				thisPlayer.setTranslateX(30);
 				thisPlayer.setTranslateY(200); // + offsetY);
 				
+			    rectangleView = new ImageView();
+			    rectangleView.setImage(rectangle);
+			    
+			    rectangleView.setFitHeight(200);
+			    rectangleView.setFitWidth(300);
+			    
+			    rectangleView.setTranslateX(620);
+			    rectangleView.setTranslateY(235);
+				
 			//}
+
+			Label gameOptions = new Label("Game Options:");
+			
+			gameOptions.setTranslateX(720);
+			gameOptions.setTranslateY(210);
+			
+			gameOptions.setFont(new Font("Times New Roman", 20));
+			gameOptions.setStyle("-fx-text-fill: #897361;");
 
 			Label playerNames = new Label("Player Names");
 
@@ -138,7 +177,7 @@ public class JavaFX extends Application {
 			playerNames.setFont(new Font("Times New Roman", 20));
 			playerNames.setStyle("-fx-text-fill: #897361;");
 
-			TextArea storyTextArea = new TextArea("story line goes here");
+			TextArea storyTextArea = new TextArea("");
 			storyTextArea.setFont(new Font("Times New Roman", 20));
 			storyTextArea.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
 
@@ -150,7 +189,7 @@ public class JavaFX extends Application {
 
 			storyTextArea.setEditable(false);
 
-			TextArea promptText = new TextArea("prompt goes here");
+			TextArea promptText = new TextArea("");
 			promptText.setText(game.getPrompt());
 			promptText.setWrapText(true);
 
@@ -167,6 +206,25 @@ public class JavaFX extends Application {
 			promptText.setEditable(false);
 
 			TextArea storyEntryTextArea = new TextArea();
+			Text lastWordObject = new Text();
+			
+			Button displayButton = new Button("Spellcheck");
+			displayButton.setStyle("-fx-background-radius: 25px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+			
+			displayButton.setTranslateX(730);
+			displayButton.setTranslateY(300);
+			
+			displayButton.setPrefWidth(100);
+			
+			displayButton.setOnMouseEntered(event -> {
+				displayButton.setStyle("-fx-background-radius: 25px; -fx-text-fill: #EFA565; -fx-background-color: #897361;");
+			});
+
+			displayButton.setOnMouseExited(event -> {
+				displayButton.setStyle("-fx-background-radius: 25px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+			});
+			
+			List<String> misspelledWords = new ArrayList<>();
 			
 			storyEntryTextArea.setOnKeyPressed(event ->{
 			
@@ -189,7 +247,7 @@ public class JavaFX extends Application {
 			                    System.out.println("Word found");
 			                    isMisspelled = false;
 			                    break;
-			                }else {
+			                } else {
 			                	isMisspelled = true;
 			                }
 			     
@@ -199,12 +257,62 @@ public class JavaFX extends Application {
 			        }
 			        
 			        if(isMisspelled == true) {
-			        	//System.out.println("Word mispelled: " +lastWord);
-			        	// code to change color of word
+			        	System.out.println("Word misspelled: " + lastWord);
+			            misspelledWords.add(lastWord);
+			            lastWordObject.setFill(Color.RED);
+			        } else {
+			            lastWordObject.setFill(Color.BLACK);
 			        }
-					
+			        
+			        displayButton.setOnAction(event2 -> {
+			            if (misspelledWords.isEmpty()) {
+			                System.out.println("No misspelled words");
+			            } else {
+			                System.out.println("Misspelled words:");
+			                for (String word : misspelledWords) {
+			                    System.out.println(word);
+			                }
+			                Stage popupStage = new Stage();
+			                popupStage.setTitle("Misspelled Words");
+
+			                ListView<String> listView = new ListView<>();
+			                ObservableList<String> items = FXCollections.observableArrayList(misspelledWords);
+			                listView.setItems(items);
+			                listView.setStyle("-fx-text-fill: #897361");
+
+			                VBox vbox = new VBox(listView);
+			                vbox.setPadding(new Insets(10));
+			                vbox.setSpacing(10);
+			                vbox.setStyle("-fx-background-color: #EFA565");
+
+			                Scene popupScene = new Scene(vbox, 300, 200);
+			                popupStage.setScene(popupScene);
+			                popupStage.show();
+			                
+			                misspelledWords.clear();
+			            }
+			        });
+			        
 				}
 				
+			});
+			
+			Button disconnectButton = new Button("End Session"); 
+			
+			disconnectButton.setTranslateX(730);
+			disconnectButton.setTranslateY(350);
+			
+			disconnectButton.setPrefWidth(100);
+
+			disconnectButton.setOnAction(f->primaryStage.setScene(scene));
+			disconnectButton.setStyle("-fx-background-radius: 25px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+
+			disconnectButton.setOnMouseEntered(event -> {
+				disconnectButton.setStyle("-fx-background-radius: 25px; -fx-text-fill: #EFA565; -fx-background-color: #897361;");
+			});
+
+			disconnectButton.setOnMouseExited(event -> {
+				disconnectButton.setStyle("-fx-background-radius: 25px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
 			});
 
 			Button submitButton = new Button("Submit");
@@ -238,7 +346,7 @@ public class JavaFX extends Application {
 				submitButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
 			});
 
-			storyEntryTextArea.setPromptText("Write your Story here");
+			storyEntryTextArea.setPromptText("Write your story here...");
 			storyEntryTextArea.setFont(new Font("Times New Roman", 20));
 			storyEntryTextArea.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
 			storyEntryTextArea.setWrapText(true);
@@ -260,7 +368,7 @@ public class JavaFX extends Application {
 
 			Button previousButton = previousButton(primaryStage);
 
-			playGroup.getChildren().addAll(previousButton, promptText, promptLabel, storyTextArea, storyEntryTextArea, playerNames, thisPlayer);
+			playGroup.getChildren().addAll(disconnectButton, promptText, promptLabel, storyTextArea, storyEntryTextArea, playerNames, thisPlayer, submitButton, gameOptions, displayButton, rectangleView);
 			playScene.setFill(Color.web("#FFFDD0"));
 
 		} catch (FileNotFoundException e1) {
@@ -473,8 +581,8 @@ public class JavaFX extends Application {
 	public Button previousButton(Stage primaryStage) {
 
 		Button previousButton = new Button("Previous"); 
-		previousButton.setTranslateX(800);
-		previousButton.setTranslateY(650);
+		previousButton.setTranslateX(780);
+		previousButton.setTranslateY(630);
 
 		previousButton.setOnAction(f->primaryStage.setScene(scene));
 		previousButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
