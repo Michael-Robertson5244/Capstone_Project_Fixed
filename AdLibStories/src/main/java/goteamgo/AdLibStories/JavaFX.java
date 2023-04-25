@@ -7,10 +7,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Locale;
+import java.io.*;
 
 import javax.swing.JScrollPane;
 
@@ -65,6 +67,8 @@ public class JavaFX extends Application {
 	Socket client;
 	static Server server;
 	static int portNo = 60999;
+	private ObjectOutputStream outputObject;
+	private ObjectInputStream inputObject;
 	
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -262,21 +266,31 @@ public class JavaFX extends Application {
             	
             	if(players > 6 || players < 2)
             	{
-            		//pop up saying too many players
+            		Alert alert = new Alert(Alert.AlertType.WARNING);
+    				alert.setTitle("Error");
+    				alert.setHeaderText("Please enter a number of players between 2-6.");
+    				alert.showAndWait();
             	}
             	else
             	{
-            		//TODO: Send number of players to server
             		//Starts the new server
             		server = new Server(portNo, players);
             		new Thread(server).start();
             		
-            		
-            		//TODO: Connect the host to the server.
-            		
-            		
-            		//Display the game screen
-            		playGame(primaryStage);
+            		InetAddress localHost;
+					try {
+						localHost = InetAddress.getLocalHost();
+						
+						//TODO: Connect the host to the server.
+						joinServer(primaryStage, localHost.getHostName());
+	            		
+	            		//Display the game screen
+	            		playGame(primaryStage);
+					} 
+					catch (UnknownHostException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
             	}
 
             }
@@ -546,8 +560,6 @@ public class JavaFX extends Application {
 						String userName = userText.getText();
 						String passWord = passText.getText();
 						
-						System.out.println("Username: " + userName);
-						
 						if(loggedIn)
 						{
 							Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -559,8 +571,6 @@ public class JavaFX extends Application {
 						else if(DB.login(userName, passWord))
 						{
 							playerProfile = new Player(userName, DB.getDisplayName(userName));
-							
-							System.out.println("Username: " + playerProfile.getUsername() + ", DisplayName: " + playerProfile.getDisplayName());
 							
 							Alert alert = new Alert(Alert.AlertType.WARNING);
 							alert.setTitle("Success");
@@ -614,88 +624,79 @@ public class JavaFX extends Application {
         joinButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                // TODO: Add logic for joining a room
-            	Group joinGroup = new Group();
-                Scene joinScene = new Scene(joinGroup,900,700);
+            	if(loggedIn)
+            	{
+            		// TODO: Add logic for joining a room
+            		Group joinGroup = new Group();
+            		Scene joinScene = new Scene(joinGroup,900,700);
                 
-                Label joinLabel = new Label("Enter Room Code:");
-                joinLabel.setFont(new Font("Times New Roman", 30));
-                joinLabel.setStyle("-fx-text-fill: #897361;");
+            		Label joinLabel = new Label("Enter Room Code:");
+            		joinLabel.setFont(new Font("Times New Roman", 30));
+            		joinLabel.setStyle("-fx-text-fill: #897361;");
+            		
+            		joinLabel.setTranslateX(322);
+            		joinLabel.setTranslateY(250);
                 
-                joinLabel.setTranslateX(322);
-                joinLabel.setTranslateY(250);
-                
-                TextArea joinArea = new TextArea();
-                joinArea.setPromptText("room code goes here");
-                joinArea.setStyle("-fx-text-fill: #897361;");
+            		TextArea joinArea = new TextArea();
+            		joinArea.setPromptText("room code goes here");
+            		joinArea.setStyle("-fx-text-fill: #897361;");
             	
-                joinArea.setPrefWidth(200);
-                joinArea.setPrefHeight(50);
+            		joinArea.setPrefWidth(200);
+            		joinArea.setPrefHeight(50);
                 
-                joinArea.setTranslateX(335);
-                joinArea.setTranslateY(330);
+            		joinArea.setTranslateX(335);
+            		joinArea.setTranslateY(330);
                 
-                //This button will let the user join the server and bring to the lobby screen.
-                Button joinRoomButton = new Button("JOIN ROOM");
-                joinRoomButton.setStyle("-fx-background-radius: 25px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
-                joinRoomButton.setFont(new Font("Times New Roman", 20));
+            		//This button will let the user join the server and bring to the lobby screen.
+            		Button joinRoomButton = new Button("JOIN ROOM");
+            		joinRoomButton.setStyle("-fx-background-radius: 25px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+            		joinRoomButton.setFont(new Font("Times New Roman", 20));
                 
-                joinRoomButton.setPrefWidth(200);
+            		joinRoomButton.setPrefWidth(200);
                 
-                joinRoomButton.setTranslateX(335);
-                joinRoomButton.setTranslateY(430);
+            		joinRoomButton.setTranslateX(335);
+            		joinRoomButton.setTranslateY(430);
                 
-                joinRoomButton.setOnMouseEntered(event -> {
-            	    joinRoomButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #EFA565; -fx-background-color: #897361;");
-            	});
+            		joinRoomButton.setOnMouseEntered(event -> {
+            			joinRoomButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #EFA565; -fx-background-color: #897361;");
+            		});
             	
-            	joinRoomButton.setOnMouseExited(event -> {
-            	    joinRoomButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
-            	});
+            		joinRoomButton.setOnMouseExited(event -> {
+            			joinRoomButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+            		});
                 
-                joinRoomButton.setOnAction(new EventHandler<ActionEvent>() {
+            		joinRoomButton.setOnAction(new EventHandler<ActionEvent>() {
 
-					@Override
-					public void handle(ActionEvent event) {
+            			@Override
+            			public void handle(ActionEvent event) {
 						
-						String host = joinArea.getText();
-						//Need to check if the connection to the server is good
-						try {
-							client = new Socket(host, portNo);
-							
-							//TODO: Send the player object to the server so it has it
-							
-							//TODO: Receive list of players and player number so that turns can be tracked
-							
-							//Goes to the game screen
-							playGame(primaryStage);
-						} 
-						catch (UnknownHostException e) {
-							// TODO Auto-generated catch block
-							// Have a pop up that the IP is wrong
-							e.printStackTrace();
-						} 
-						catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+            				String host = joinArea.getText();
 						
-					}
+            				joinServer(primaryStage, host);
+            			}	
                 	
-                });
+            		});
             
-                Button previousButton = previousButton(primaryStage);
+            		Button previousButton = previousButton(primaryStage);
                 
-                joinGroup.getChildren().addAll(previousButton, joinRoomButton, joinLabel, joinArea);
-                joinScene.setFill(Color.web("#FFFDD0"));
+            		joinGroup.getChildren().addAll(previousButton, joinRoomButton, joinLabel, joinArea);
+            		joinScene.setFill(Color.web("#FFFDD0"));
                 
-                primaryStage.setScene(joinScene);
-                primaryStage.show();
+            		primaryStage.setScene(joinScene);
+            		primaryStage.show();
+            	}
+            	else
+                {
+            		Alert alert = new Alert(Alert.AlertType.WARNING);
+    				alert.setTitle("Error");
+    				alert.setHeaderText("Need to login to join a game.");
+    				alert.setContentText("Please return to the menu.");
+    				alert.showAndWait();
+                }
             }
         });
         
-        return joinButton;
-    	
+        	return joinButton;
     }
     
     public Button createButton(Stage primaryStage) {
@@ -726,41 +727,54 @@ public class JavaFX extends Application {
     	createButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-            	// TODO: Create a server with the IP of the host and a defined portNo
-            	// 		 After server is started display the play screen where the IP and port are shown
-            	//		 Ask for max number of players
             	
-            	Group createRoomGroup = new Group();
-                Scene createRoomScene = new Scene(createRoomGroup,900,700);
+            	if(loggedIn)
+            	{
+            		// TODO: Create a server with the IP of the host and a defined portNo
+            		// 		 After server is started display the play screen where the IP and port are shown
+            		//		 Ask for max number of players
+            	
+            		Group createRoomGroup = new Group();
+            		Scene createRoomScene = new Scene(createRoomGroup,900,700);
                 
-                Button previousButton = previousButton(primaryStage);
+            		Button previousButton = previousButton(primaryStage);
 
-                TextArea numPlayers = new TextArea("");
-                numPlayers.setFont(new Font("Times New Roman", 20));
+            		TextArea numPlayers = new TextArea("");
+            		numPlayers.setFont(new Font("Times New Roman", 20));
             	
-            	numPlayers.setPrefWidth(40);
-            	numPlayers.setPrefHeight(30);
+            		numPlayers.setPrefWidth(40);
+            		numPlayers.setPrefHeight(30);
             	
-            	numPlayers.setTranslateX(400);
-            	numPlayers.setTranslateY(345);
+            		numPlayers.setTranslateX(400);
+            		numPlayers.setTranslateY(345);
             	
-            	numPlayers.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
-                numPlayers.setEditable(true);
+            		numPlayers.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
+            		numPlayers.setEditable(true);
                 
-                //Need to change it so that it will handle more than one person and keep track of turns.
-                Button playButton = playButton(primaryStage, numPlayers);
-                playButton.setTranslateY(550);
-                playButton.setTranslateX(300);
+            		//Need to change it so that it will handle more than one person and keep track of turns.
+            		Button playButton = playButton(primaryStage, numPlayers);
+            		playButton.setTranslateY(550);
+            		playButton.setTranslateX(300);
                 
-                createRoomGroup.getChildren().addAll(createRoomLabel, numPlayers, previousButton, playButton);
-                createRoomScene.setFill(Color.web("#FFFDD0"));
+            		createRoomGroup.getChildren().addAll(createRoomLabel, numPlayers, previousButton, playButton);
+            		createRoomScene.setFill(Color.web("#FFFDD0"));
                 
-                primaryStage.setScene(createRoomScene);
-                primaryStage.show();
+            		primaryStage.setScene(createRoomScene);
+            		primaryStage.show();
+            	}
+            	else
+            	{
+            		Alert alert = new Alert(Alert.AlertType.WARNING);
+    				alert.setTitle("Error");
+    				alert.setHeaderText("Need to login to create a game.");
+    				alert.setContentText("Please return to the menu.");
+    				alert.showAndWait();
+            	}
             }
         });
     	return createButton;
     }
+    
     
     public Button profileButton(Stage primaryStage) {
     	Button profileButton = new Button("PROFILE");
@@ -779,81 +793,92 @@ public class JavaFX extends Application {
     	profileButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                // TODO: Add logic for creating a room
             	
-            	String playerUser = playerProfile.getUsername();
-            	//playerProfile.getDisplayName();
+            	if(loggedIn)
+            	{
+            		String playerUser = playerProfile.getUsername();
+            		//playerProfile.getDisplayName();
             	
-            	Label playerUsername = new Label("Username:");
+            		Label playerUsername = new Label("Username:");
             	
-            	playerUsername.setFont(new Font("Times New Roman", 34));
-            	playerUsername.setStyle("-fx-text-fill: #897361;");
+            		playerUsername.setFont(new Font("Times New Roman", 34));
+            		playerUsername.setStyle("-fx-text-fill: #897361;");
               
-            	playerUsername.setPrefWidth(250);
-            	playerUsername.setPrefHeight(50);
+            		playerUsername.setPrefWidth(250);
+            		playerUsername.setPrefHeight(50);
              	
-            	playerUsername.setTranslateX(250);
-            	playerUsername.setTranslateY(200);
+            		playerUsername.setTranslateX(250);
+            		playerUsername.setTranslateY(200);
              	
-            	Label playerDisplay = new Label("Display Name:");
+            		Label playerDisplay = new Label("Display Name:");
             	
-            	playerDisplay.setFont(new Font("Times New Roman", 34));
-            	playerDisplay.setStyle("-fx-text-fill: #897361;");
+            		playerDisplay.setFont(new Font("Times New Roman", 34));
+            		playerDisplay.setStyle("-fx-text-fill: #897361;");
                 
-            	playerDisplay.setPrefWidth(250);
-            	playerDisplay.setPrefHeight(50);
+            		playerDisplay.setPrefWidth(250);
+            		playerDisplay.setPrefHeight(50);
              	
-            	playerDisplay.setTranslateX(200);
-            	playerDisplay.setTranslateY(300);
+            		playerDisplay.setTranslateX(200);
+            		playerDisplay.setTranslateY(300);
             	
-            	TextArea playerUsernameText = new TextArea();
+            		TextArea playerUsernameText = new TextArea();
             	
-            	playerUsernameText.setFont(new Font("Times New Roman", 20));
-            	playerUsernameText.setStyle("-fx-text-fill: #897361;");
+            		playerUsernameText.setFont(new Font("Times New Roman", 20));
+            		playerUsernameText.setStyle("-fx-text-fill: #897361;");
             	
-            	playerUsernameText.setPrefWidth(150);
-            	playerUsernameText.setPrefHeight(playerUsernameText.getFont().getSize() * 2);
+            		playerUsernameText.setPrefWidth(150);
+            		playerUsernameText.setPrefHeight(playerUsernameText.getFont().getSize() * 2);
              	
-            	playerUsernameText.setTranslateX(450);
-            	playerUsernameText.setTranslateY(200);
+            		playerUsernameText.setTranslateX(450);
+            		playerUsernameText.setTranslateY(200);
             	
-            	playerUsernameText.setEditable(false);
+            		playerUsernameText.setEditable(false);
             	
-            	playerUsernameText.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
+            		playerUsernameText.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
             	
-            	TextArea playerDisplayText = new TextArea();
+            		TextArea playerDisplayText = new TextArea();
             	
-            	playerDisplayText.setFont(new Font("Times New Roman", 20));
-            	playerDisplayText.setStyle("-fx-text-fill: #897361;");
+            		playerDisplayText.setFont(new Font("Times New Roman", 20));
+            		playerDisplayText.setStyle("-fx-text-fill: #897361;");
             	
-            	playerDisplayText.setPrefWidth(150);
-            	playerDisplayText.setPrefHeight(playerDisplayText.getFont().getSize() * 2);
+            		playerDisplayText.setPrefWidth(150);
+            		playerDisplayText.setPrefHeight(playerDisplayText.getFont().getSize() * 2);
              	
-            	playerDisplayText.setTranslateX(450);
-            	playerDisplayText.setTranslateY(300);
+            		playerDisplayText.setTranslateX(450);
+            		playerDisplayText.setTranslateY(300);
             	
-            	playerDisplayText.setEditable(false);
+            		playerDisplayText.setEditable(false);
             	
-            	playerDisplayText.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
+            		playerDisplayText.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
             	
-            	playerUsernameText.setText(playerProfile.getUsername());
-            	playerDisplayText.setText(playerProfile.getDisplayName());
+            		playerUsernameText.setText(playerProfile.getUsername());
+            		playerDisplayText.setText(playerProfile.getDisplayName());
             	
-            	Group profileGroup = new Group();
-                Scene profileScene = new Scene(profileGroup,900,700);
+            		Group profileGroup = new Group();
+                	Scene profileScene = new Scene(profileGroup,900,700);
                 
-                Button previousButton = previousButton(primaryStage);
+                	Button previousButton = previousButton(primaryStage);
 
-                profileGroup.getChildren().addAll(previousButton, playerUsername, playerDisplay, playerUsernameText, playerDisplayText);
-                profileScene.setFill(Color.web("#FFFDD0"));
+                	profileGroup.getChildren().addAll(previousButton, playerUsername, playerDisplay, playerUsernameText, playerDisplayText);
+                	profileScene.setFill(Color.web("#FFFDD0"));
                 
-                primaryStage.setScene(profileScene);
-                primaryStage.show();
+                	primaryStage.setScene(profileScene);
+                	primaryStage.show();
+            	}
+            	else
+            	{
+            		Alert alert = new Alert(Alert.AlertType.WARNING);
+    				alert.setTitle("Error");
+    				alert.setHeaderText("Need to login to view your profile.");
+    				alert.setContentText("Please return to the menu.");
+    				alert.showAndWait();
+            	}
             }
         });
     	
     	return profileButton;
     }
+    
     
     public Button sendButton(Stage primaryStage) {
     	
@@ -864,12 +889,58 @@ public class JavaFX extends Application {
         return send;
     }
     
+    
     public void setLoggedInTrue() {
     	this.loggedIn = true;
     }
     
-    public void joinServer(int IP) {
-    	
+    
+    public void joinServer(Stage primaryStage, String IP) {
+    	//Need to check if the connection to the server is good
+		try {
+			client = new Socket(IP, portNo);
+			
+			//TODO: Send the player object to the server so it has it
+			outputObject = new ObjectOutputStream(client.getOutputStream());
+			inputObject = new ObjectInputStream(client.getInputStream());
+			
+			if(inputObject.readObject().equals("success"))
+			{
+				outputObject.writeObject(playerProfile);
+			
+				playerProfile.setPlayerNum((int)inputObject.readObject());
+				System.out.println("Player number: " + playerProfile.getPlayerNum());
+			
+				//TODO: Receive list of players and player number so that turns can be tracked
+			
+				//Goes to the game screen
+				playGame(primaryStage);
+			}
+			else
+			{
+				//Pop up that tells the user that the max number of players have joined
+				Alert alert = new Alert(Alert.AlertType.WARNING);
+				alert.setTitle("Error");
+				alert.setHeaderText("Max Number of Players Reached.");
+				alert.setContentText("Please return to the menu.");
+				alert.showAndWait();
+				
+				//Closes the connection to the server.
+				client.close();
+			}
+		} 
+		catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			// Have a pop up that the IP is wrong
+			e.printStackTrace();
+		} 
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     
     public static void main(String[] args) {

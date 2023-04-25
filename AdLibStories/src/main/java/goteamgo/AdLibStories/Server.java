@@ -3,6 +3,7 @@ package goteamgo.AdLibStories;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -17,16 +18,15 @@ import java.net.InetAddress;
 
 public class Server implements Runnable{
 
-	private int numPlayers = 1;
+	private int numPlayers = 0;
 	private int maxPlayers;
 	private int port;
 	private List<User> clients;
 	private List<Player> players;
 	private ServerSocket server;
-
-	/*public static void main(String[] args) throws IOException {
-		new Server(60564, 4).run();
-	}*/
+	private ObjectOutputStream outputObject;
+	private ObjectInputStream inputObject;
+	
 
 	public Server(int port, int maxPlayers) {
 		this.port = port;
@@ -37,7 +37,8 @@ public class Server implements Runnable{
 	public void run() {
 		
 		InetAddress localhost;
-		try {
+		try 
+		{
 			localhost = InetAddress.getLocalHost();
 			
 			server = new ServerSocket(port, 1, localhost) {
@@ -45,74 +46,88 @@ public class Server implements Runnable{
 					this.close();
 				}
 			};
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (UnknownHostException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		
-		System.out.println("Port 60564 is now open.");
-		System.out.println(server.getInetAddress().getHostAddress());
-		System.out.println(server.getLocalPort());
+		System.out.println("IP Address: " + server.getInetAddress().getHostAddress());
+		System.out.println("Port num: " + server.getLocalPort());
 
 		while (true) 
 		{
-			// accepts a new client
+			// accepts a new client if not at max number of players
 			if(numPlayers < maxPlayers)
 			{
 				try {
+					String connectionSuccess = "success";
+					
 					Socket client = server.accept();
-				} catch (IOException e) {
+					
+					this.outputObject = new ObjectOutputStream(client.getOutputStream());
+					this.inputObject = new ObjectInputStream(client.getInputStream());
+					
+					outputObject.writeObject(connectionSuccess);
+					
+					//Receive the player from the newly joined client and add it to list of players
+					Player player = (Player)this.inputObject.readObject();
+					
+					//Set player number in server and send the playerNum to the player
+					numPlayers++;
+					player.setPlayerNum(numPlayers);
+					outputObject.writeObject(numPlayers);
+					
+					//Add the player to the list of players and increment the number of players
+					this.players.add(player);
+					
+					//Send the player list to all the clients to update in the game
+					
+					
+					//Start a thread to handle incoming requests from the user that joined.
+					new Thread(new UserHandler(this, player, client)).start();
+				} 
+				catch (IOException e) {
+					e.printStackTrace();
+				} 
+				catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+			}
+			else
+			{
+				//Handles when there is a connection but the max number of players has been reached
+				try {
+					String failedConnection = "Maxplayers";
+					
+					Socket client = server.accept();
+					
+					this.outputObject = new ObjectOutputStream(client.getOutputStream());
+					this.inputObject = new ObjectInputStream(client.getInputStream());
+					
+					outputObject.writeObject(failedConnection);
+					
+				} 
+				catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-				//Receive the player from the newly joined client and add it to list of players
-				
-				//Send the playerNum to the player
-				
-				//Send the player list to all the clients to update in the game
-				
-				numPlayers++;
-
-			/* get nickname of newUser
-			String nickname = (new Scanner ( client.getInputStream() )).nextLine();
-			nickname = nickname.replace(",", ""); //  ',' use for serialisation
-			nickname = nickname.replace(" ", "_");
-			System.out.println("New Client: \"" + nickname + "\"\n\t     Host:" + client.getInetAddress().getHostAddress());
-
-			// create new User
-			User newUser = new User(client, nickname);
-
-			// add newUser message to list
-			this.clients.add(newUser);
-
-			// Welcome msg
-			newUser.getOutStream().println(
-					"<img src='https://www.kizoa.fr/img/e8nZC.gif' height='42' width='42'>"
-							+ "<b>Welcome</b> " + newUser.toString() +
-							"<img src='https://www.kizoa.fr/img/e8nZC.gif' height='42' width='42'>"
-					);
-			*/
-
-				// create a new thread for newUser incoming messages handling
-				new Thread(new UserHandler(this)).start();
 			}
 		}
   }
 
+	
   // delete a user from the list
-	public void removeUser(User user){
-		this.clients.remove(user);
+	public void removePlayer(Player player){
+		this.players.remove(player);
 	}
 
 	// send incoming msg to all Users
 	public void broadcastMessages(String msg, User userSender) {
-		for (User client : this.clients) {
-			client.getOutStream().println(userSender.toString() + "<span>: " + msg+"</span>");
+		for (Player player: this.players) {
+			//client.getOutStream().println(userSender.toString() + "<span>: " + msg+"</span>");
 		}
 	}
 
@@ -142,53 +157,64 @@ public class Server implements Runnable{
 class UserHandler implements Runnable {
 
 	private Server server;
-	private User user;
+	private Player player;
+	private Socket client;
 
-	public UserHandler(Server server) {
+	public UserHandler(Server server, Player player, Socket client) {
 		this.server = server;
+		this.player = player;
+		this.client = client;
 		//this.user = user;
-		this.server.broadcastAllUsers();
+		//this.server.broadcastAllUsers();
   }
 
 	public void run() {
 		String message;
 
 		// when there is a new message, broadcast to all
-		Scanner sc = new Scanner(this.user.getInputStream());
-		
-		while (sc.hasNextLine()) 
-		{
-			message = sc.nextLine();
+		Scanner sc;
+		try {
+			sc = new Scanner(this.client.getInputStream());
+			
+			while (sc.hasNextLine()) 
+			{
+				message = sc.nextLine();
 
-      		// Gestion des messages private
-      		if (message.charAt(0) == '@')
-      		{
-      			if(message.contains(" "))
-      			{
-      				System.out.println("private msg : " + message);
-      				int firstSpace = message.indexOf(" ");
-      				String userPrivate = message.substring(1, firstSpace);
-      				server.sendMessageToUser(message.substring(firstSpace+1, message.length()), user, userPrivate);
-      			}
+	      		// Gestion des messages private
+	      		/*if (message.charAt(0) == '@')
+	      		{
+	      			if(message.contains(" "))
+	      			{
+	      				System.out.println("private msg : " + message);
+	      				int firstSpace = message.indexOf(" ");
+	      				String userPrivate = message.substring(1, firstSpace);
+	      				server.sendMessageToUser(message.substring(firstSpace+1, message.length()), user, userPrivate);
+	      			}
 
-      			// Gestion du changement
-      		}
-      		else if (message.charAt(0) == '#')
-      		{
-      			user.changeColor(message);
-      			// update color for all other users
-      			this.server.broadcastAllUsers();
-      		}
-      		else
-      		{
-      			// update user list
-      			server.broadcastMessages(message, user);
-      		}
+	      			// Gestion du changement
+	      		}
+	      		else if (message.charAt(0) == '#')
+	      		{
+	      			user.changeColor(message);
+	      			// update color for all other users
+	      			this.server.broadcastAllUsers();
+	      		}
+	      		else
+	      		{
+	      			// update user list
+	      			server.broadcastMessages(message, user);
+	      		}*/
+			}
+			// end of Thread
+			//server.removeUser(user);
+			//this.server.broadcastAllUsers();
+			sc.close();
+		} 
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		// end of Thread
-		server.removeUser(user);
-		this.server.broadcastAllUsers();
-		sc.close();
+		
 	}
 }
 
@@ -211,28 +237,6 @@ class User {
 		this.nickname = name;
 		this.userId = nbUser;
 		nbUser += 1;
-	}
-
-	// change color user
-	public void changeColor(String hexColor){
-		// check if it's a valid hexColor
-		Pattern colorPattern = Pattern.compile("#([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})");
-		Matcher m = colorPattern.matcher(hexColor);
-		if (m.matches())
-		{
-			Color c = Color.decode(hexColor);
-			// if the Color is too Bright don't change
-			double luma = 0.2126 * c.getRed() + 0.7152 * c.getGreen() + 0.0722 * c.getBlue(); // per ITU-R BT.709
-			if (luma > 160) 
-			{
-				this.getOutStream().println("<b>Color Too Bright</b>");
-				return;
-			}
-			this.color = hexColor;
-			this.getOutStream().println("<b>Color changed successfully</b> " + this.toString());
-			return;
-		}
-		this.getOutStream().println("<b>Failed to change color</b>");
 	}
 
 	// getteur

@@ -3,15 +3,17 @@
 
 package goteamgo.AdLibStories;
 
-import java.util.Scanner;
+import java.io.Serializable;
 
-public class Player {
+public class Player implements Serializable{
 
+	private static final long serialVersionUID = 5950169519310163575L;
 	int playerNum;
 	String username;
 	String displayName;
-	Scanner scan = new Scanner(System.in);
 
+	public Player() {}
+	
 	public Player(String username, String displayName) {
 		this.username = username;
 		this.displayName = displayName;
@@ -41,5 +43,8 @@ public class Player {
 		this.displayName = displayName;
 	}
 
-	
+	public String toString()
+	{
+		return "Username = " + getUsername() + " ; DisplayName = " + getDisplayName();
+	}
 }
