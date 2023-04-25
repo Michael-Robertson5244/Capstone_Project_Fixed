@@ -7,24 +7,6 @@ import java.io.InputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import java.util.Properties;
-import edu.stanford.nlp.pipeline.CoreDocument;
-import edu.stanford.nlp.pipeline.CoreEntityMention;
-import edu.stanford.nlp.pipeline.CoreSentence;
-import edu.stanford.nlp.pipeline.StanfordCoreNLP;
-import edu.stanford.nlp.coref.data.CorefChain;
-import edu.stanford.nlp.ling.*;
-import edu.stanford.nlp.ie.util.*;
-import edu.stanford.nlp.pipeline.*;
-import edu.stanford.nlp.semgraph.*;
-import edu.stanford.nlp.trees.*;
-import java.util.*;
-import edu.stanford.nlp.ling.CoreAnnotations;
-import edu.stanford.nlp.coref.CorefCoreAnnotations;
-import edu.stanford.nlp.coref.data.Mention;
-import edu.stanford.nlp.pipeline.Annotation;
-import edu.stanford.nlp.util.CoreMap;
-
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -47,7 +29,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.scene.control.Alert;
-
+import java.io.*;
 
 public class JavaFX extends Application {
 
@@ -186,10 +168,6 @@ public class JavaFX extends Application {
 
 			TextArea storyEntryTextArea = new TextArea();
 			
-			Properties props = new Properties();
-			props.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner");
-			StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
-			
 			storyEntryTextArea.setOnKeyPressed(event ->{
 			
 				KeyCode keyCode = event.getCode();
@@ -199,29 +177,32 @@ public class JavaFX extends Application {
 					String[] words = currentText.split(" ");
 					String lastWord = words[words.length - 1];
 					
-					Annotation annotation = new Annotation(lastWord);
-
-			        // run the pipeline on the Annotation object
-			        pipeline.annotate(annotation);
-
-			        // get the list of Tokens from the pipeline output
-			        List<CoreLabel> tokens = annotation.get(CoreAnnotations.TokensAnnotation.class);
-
-			        // check if the last word is misspelled
-			        boolean isMisspelled = false;
-			        if (tokens.size() == 1) {
-			            CoreLabel token = tokens.get(0);
-			            isMisspelled = token.containsKey(CoreAnnotations.CorrectionAnnotation.class);
-			        }
-
-			        // print the result
-			        if (isMisspelled) {
-			            System.out.println(lastWord + " is misspelled!");
-			        } else {
-			            System.out.println(lastWord + " is spelled correctly.");
-			        }
 
 					System.out.println("Last word: " + lastWord);
+					
+					String file = "words.txt";
+					boolean isMisspelled = false;
+			        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+			            String line;
+			            while ((line = br.readLine()) != null) {
+			                if (line.contains(lastWord)) {
+			                    System.out.println("Word found");
+			                    isMisspelled = false;
+			                    break;
+			                }else {
+			                	isMisspelled = true;
+			                }
+			     
+			            }
+			        } catch (IOException e) {
+			            e.printStackTrace();
+			        }
+			        
+			        if(isMisspelled == true) {
+			        	//System.out.println("Word mispelled: " +lastWord);
+			        	// code to change color of word
+			        }
+					
 				}
 				
 			});

@@ -35,12 +35,12 @@ public class GameJUnitTest {
 	//Test successful mongodb connection
 	//If successful, returns a random string prompt from database
 	//When testing, you will get one success and one fail, the database can't connect successfully and unsuccessfully
-	/*@Test
+	@Test
 	public void testSuccessMongoDBConnection() {
 		DB db = new DB();
 		//If successful connection, the string returned will not be Connection Error
 		assertNotEquals("Connection Error",db.getRandomPrompt());
-	}*/
+	}
 	
 	//Test unsuccessful mongodb connection
 	//If unsuccessful, Connection Error will be returned as prompt
