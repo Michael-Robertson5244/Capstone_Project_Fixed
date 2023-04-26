@@ -1,8 +1,5 @@
 package goteamgo.AdLibStories;
 
-import java.awt.ScrollPane;
-import java.awt.TextField;
-import java.awt.event.KeyEvent;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -16,16 +13,21 @@ import java.util.Locale;
 import java.io.*;
 
 import javax.swing.JScrollPane;
+import javafx.scene.image.WritableImage;
 
-import org.bson.Document;
+import java.net.Socket;
+import java.util.List;
+import javafx.collections.ObservableList;
+import javafx.scene.control.ListView;
+import javafx.scene.layout.VBox;
+import javafx.collections.FXCollections;
 
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+import java.util.ArrayList;
+import java.net.UnknownHostException;
 
 import goteamgo.AdLibStories.Server.UserHandler;
 import javafx.application.Application;
+import javafx.scene.text.Text;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -43,17 +45,11 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.CycleMethod;
-import javafx.scene.paint.LinearGradient;
-import javafx.scene.paint.Stop;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.scene.control.Alert;
-
+import java.io.*;
 
 public class JavaFX extends Application {
 
@@ -62,9 +58,9 @@ public class JavaFX extends Application {
 	boolean loggedIn = false;
 	Player playerProfile;
 	ArrayList<Player> players = new ArrayList<Player>();
-	
+  
 	//SpellChecker spellchecker = profile.spellChecker();
-			
+
 	static Game game = new Game();
 	Socket client;
 	static Server server;
@@ -128,6 +124,67 @@ public class JavaFX extends Application {
     	Group playGroup = new Group();
         Scene playScene = new Scene(playGroup,900,700);
     	
+      InputStream playerIconStream;
+		
+		Image playerIcon;
+		ImageView thisPlayer;
+		
+		InputStream rectangleStream;
+		
+		Image rectangle;
+		ImageView rectangleView;
+
+		try {
+
+			playerIconStream = new FileInputStream("currentUserIcon.png");
+
+			playerIcon = new Image(playerIconStream);
+			
+			rectangleStream = new FileInputStream("rectangle.png");
+			
+			rectangle = new Image(rectangleStream);
+			
+			WritableImage rect = new WritableImage((int) rectangle.getWidth(), (int) rectangle.getHeight());
+			
+			//int numPlayersInGame = Integer.parseInt(numPlayersTextArea.getText());
+
+			//System.out.println(numPlayersInGame);
+			
+			int iconHeight = 30;
+			int margin = 20;
+			
+			//for(int index = 0; index < numPlayersInGame; index++) {
+				
+				thisPlayer = new ImageView();
+				thisPlayer.setImage(playerIcon);
+				
+				thisPlayer.setFitHeight(iconHeight);
+				thisPlayer.setFitWidth(30);
+
+				//int offsetY = index * (iconHeight + margin);
+				
+				thisPlayer.setTranslateX(30);
+				thisPlayer.setTranslateY(200); // + offsetY);
+				
+			    rectangleView = new ImageView();
+			    rectangleView.setImage(rectangle);
+			    
+			    rectangleView.setFitHeight(200);
+			    rectangleView.setFitWidth(300);
+			    
+			    rectangleView.setTranslateX(620);
+			    rectangleView.setTranslateY(235);
+				
+			//}
+
+			Label gameOptions = new Label("Game Options:");
+			
+			gameOptions.setTranslateX(720);
+			gameOptions.setTranslateY(210);
+			
+			gameOptions.setFont(new Font("Times New Roman", 20));
+			gameOptions.setStyle("-fx-text-fill: #897361;");
+      
     	Label playerNames = new Label("Player Names");
     	
     	playerNames.setTranslateX(55);
@@ -173,19 +230,115 @@ public class JavaFX extends Application {
     	promptText.setEditable(false);
     	
     	TextArea storyEntryTextArea = new TextArea();
-    	//spellchecker.setsetUserDictionaryProvider(null);
-    	storyEntryTextArea.setOnKeyPressed(event ->{
-    		
-    	KeyCode keyCode = event.getCode();
-            		
-            		if(keyCode == KeyCode.SPACE || keyCode == KeyCode.ENTER) {
-            			 String currentText = storyEntryTextArea.getText();
-            			 String[] words = currentText.split(" ");
-            			 String lastWord = words[words.length - 1];
+			Text lastWordObject = new Text();
+			
+			Button displayButton = new Button("Spellcheck");
+			displayButton.setStyle("-fx-background-radius: 25px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+			
+			displayButton.setTranslateX(730);
+			displayButton.setTranslateY(300);
+			
+			displayButton.setPrefWidth(100);
+			
+			displayButton.setOnMouseEntered(event -> {
+				displayButton.setStyle("-fx-background-radius: 25px; -fx-text-fill: #EFA565; -fx-background-color: #897361;");
+			});
 
-            			 System.out.println("Last word: " + lastWord);
-            		}
-            	});
+			displayButton.setOnMouseExited(event -> {
+				displayButton.setStyle("-fx-background-radius: 25px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+			});
+			
+			List<String> misspelledWords = new ArrayList<>();
+			
+			storyEntryTextArea.setOnKeyPressed(event ->{
+			
+				KeyCode keyCode = event.getCode();
+
+				if(keyCode == KeyCode.SPACE || keyCode == KeyCode.ENTER) {
+					String currentText = storyEntryTextArea.getText();
+					String[] words = currentText.split(" ");
+					String lastWord = words[words.length - 1];
+					
+
+					System.out.println("Last word: " + lastWord);
+					
+					String file = "words.txt";
+					boolean isMisspelled = false;
+			        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+			            String line;
+			            while ((line = br.readLine()) != null) {
+			                if (line.contains(lastWord)) {
+			                    System.out.println("Word found");
+			                    isMisspelled = false;
+			                    break;
+			                } else {
+			                	isMisspelled = true;
+			                }
+			     
+			            }
+			        } catch (IOException e) {
+			            e.printStackTrace();
+			        }
+			        
+			        if(isMisspelled == true) {
+			        	System.out.println("Word misspelled: " + lastWord);
+			            misspelledWords.add(lastWord);
+			            lastWordObject.setFill(Color.RED);
+			        } else {
+			            lastWordObject.setFill(Color.BLACK);
+			        }
+			        
+			        displayButton.setOnAction(event2 -> {
+			            if (misspelledWords.isEmpty()) {
+			                System.out.println("No misspelled words");
+			            } else {
+			                System.out.println("Misspelled words:");
+			                for (String word : misspelledWords) {
+			                    System.out.println(word);
+			                }
+			                Stage popupStage = new Stage();
+			                popupStage.setTitle("Misspelled Words");
+
+			                ListView<String> listView = new ListView<>();
+			                ObservableList<String> items = FXCollections.observableArrayList(misspelledWords);
+			                listView.setItems(items);
+			                listView.setStyle("-fx-text-fill: #897361");
+
+			                VBox vbox = new VBox(listView);
+			                vbox.setPadding(new Insets(10));
+			                vbox.setSpacing(10);
+			                vbox.setStyle("-fx-background-color: #EFA565");
+
+			                Scene popupScene = new Scene(vbox, 300, 200);
+			                popupStage.setScene(popupScene);
+			                popupStage.show();
+			                
+			                misspelledWords.clear();
+			            }
+			        });
+			        
+				}
+				
+			});
+			
+			Button disconnectButton = new Button("End Session"); 
+			
+			disconnectButton.setTranslateX(730);
+			disconnectButton.setTranslateY(350);
+			
+			disconnectButton.setPrefWidth(100);
+
+			disconnectButton.setOnAction(f->primaryStage.setScene(scene));
+			disconnectButton.setStyle("-fx-background-radius: 25px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+
+			disconnectButton.setOnMouseEntered(event -> {
+				disconnectButton.setStyle("-fx-background-radius: 25px; -fx-text-fill: #EFA565; -fx-background-color: #897361;");
+			});
+
+			disconnectButton.setOnMouseExited(event -> {
+				disconnectButton.setStyle("-fx-background-radius: 25px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+			});
+
             	
             	Button submitButton = new Button("Submit");
             	submitButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
@@ -251,30 +404,30 @@ public class JavaFX extends Application {
     	
     	promptLabel.setTranslateX(140);
     	promptLabel.setTranslateY(85);
-    	
-    	Button previousButton = previousButton(primaryStage);
-    	
-      previousButton.setOnMouseEntered(event -> {
-            	    previousButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #EFA565; -fx-background-color: #897361;");
-            	});
-            	
-            	previousButton.setOnMouseExited(event -> {
-            	    previousButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
-            	});
         
         playGroup.getChildren().addAll(previousButton, submitButton, promptText, promptLabel, storyTextArea, storyEntryTextArea, playerNames, joinCode);
         playScene.setFill(Color.web("#FFFDD0"));
         
-        primaryStage.setScene(playScene);
-        primaryStage.show();
-    }
+        } catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+
+			e1.printStackTrace();
+
+		}
+
+		primaryStage.setScene(playScene);
+		primaryStage.show();
+	}
 
     public Button playButton(Stage primaryStage, TextArea numPlayers) {
     	Button playButton = new Button("PLAY");
     	playButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+      
 		playButton.setFont(new Font("Times New Roman", 20));
+
+		playButton.setTranslateX(450);
 		playButton.setPrefWidth(250);
-		
+
 		playButton.setOnMouseEntered(event -> {
     	    playButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #EFA565; -fx-background-color: #897361;");
     	});
@@ -324,266 +477,267 @@ public class JavaFX extends Application {
         return playButton;
     }
      
-    public Button createAccountButton(Stage primaryStage) {
-    	Button createAccountButton = new Button("CREATE AN ACCOUNT");
-        
-        createAccountButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
-        createAccountButton.setFont(new Font("Times New Roman", 20));
-        createAccountButton.setPrefWidth(250);
-        
-        createAccountButton.setOnMouseEntered(event -> {
-    	    createAccountButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #EFA565; -fx-background-color: #897361;");
-    	});
-    	
-    	createAccountButton.setOnMouseExited(event -> {
-    	    createAccountButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
-    	});
-        
-        createAccountButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                // TODO: Add logic for joining a room
-            	
-               Group createAccountGroup = new Group();
-               Scene createAccountScene = new Scene(createAccountGroup,900,700);
-               
-               InputStream iconStream;
-               Image icon;
-               ImageView userIcon;
-               
-			try {
-				
-				iconStream = new FileInputStream("userIcon.png");
 
-	               icon = new Image(iconStream);
-	               
-	               userIcon = new ImageView();
-	               userIcon.setImage(icon);
-	               
-	               userIcon.setFitHeight(150);
-	               userIcon.setFitWidth(150);
-	               
-	               userIcon.setTranslateX(375);
-	               userIcon.setTranslateY(95);
-               
-               TextArea userName = new TextArea();
-               userName.setPromptText("username");
-               userName.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
-           	
-               userName.setPrefWidth(250);
-               userName.setPrefHeight(50);
-               
-               userName.setTranslateX(325);
-               userName.setTranslateY(275);
-           	
-               PasswordField passWord = new PasswordField();
-               passWord.setPromptText("password");
-               passWord.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
-           	
-               passWord.setPrefWidth(250);
-               passWord.setPrefHeight(50);
-               
-               passWord.setTranslateX(325);
-               passWord.setTranslateY(350);
-           	
-               TextArea displayName = new TextArea("");
-               displayName.setPromptText("display name");
-               displayName.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
-           	
-               displayName.setPrefWidth(250);
-               displayName.setPrefHeight(50);
-               
-               displayName.setTranslateX(325);
-               displayName.setTranslateY(425);
-            
-           	
-               Button create = new Button("CREATE ACCOUNT");
-               create.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
-               create.setFont(new Font("Times New Roman", 20));
-               create.setPrefWidth(250);
-               
-               create.setTranslateX(325);
-               create.setTranslateY(525);
-               
-               create.setOnMouseEntered(event -> {
-            	   create.setStyle("-fx-background-radius: 20px; -fx-text-fill: #EFA565; -fx-background-color: #897361;");
-               });
+	public Button createAccountButton(Stage primaryStage) {
+		Button createAccountButton = new Button("CREATE AN ACCOUNT");
 
-               create.setOnMouseExited(event -> {
-            	   create.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
-               });
-               
-               create.setOnAction(new EventHandler<ActionEvent>() {
+		createAccountButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+		createAccountButton.setFont(new Font("Times New Roman", 20));
+		createAccountButton.setPrefWidth(250);
 
-            	   @Override
-            	   public void handle(ActionEvent event) {
-					
-					String username = userName.getText();
-					String password = passWord.getText();
-					String screenName = displayName.getText();
-					
-					if(!DB.validUsername(username))
-					{
-						Alert alert = new Alert(Alert.AlertType.WARNING);
-						alert.setTitle("Error");
-						alert.setHeaderText("Account creation failed: Username in use.");
-						alert.setContentText("Please use a different username.");
-						alert.showAndWait();
-					}
-					else if(!DB.validScreenName(screenName))
-					{
-						Alert alert = new Alert(Alert.AlertType.WARNING);
-						alert.setTitle("Error");
-						alert.setHeaderText("Account creation failed: Screen name in use.");
-						alert.setContentText("Please use a different screen name.");
-						alert.showAndWait();
-					}
-					else
-					{
-						DB.insertUser(username, password, screenName);
-						
-						Alert alert = new Alert(Alert.AlertType.WARNING);
-						alert.setTitle("Success");
-						alert.setHeaderText("Account was created successfully.");
-						alert.setContentText("Please return to the menu and login.");
-						alert.showAndWait();
-					}
+		createAccountButton.setOnMouseEntered(event -> {
+			createAccountButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #EFA565; -fx-background-color: #897361;");
+		});
+
+		createAccountButton.setOnMouseExited(event -> {
+			createAccountButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+		});
+
+		createAccountButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				// TODO: Add logic for joining a room
+
+				Group createAccountGroup = new Group();
+				Scene createAccountScene = new Scene(createAccountGroup,900,700);
+
+				InputStream iconStream;
+				Image icon;
+				ImageView userIcon;
+
+				try {
+
+					iconStream = new FileInputStream("userIcon.png");
+
+					icon = new Image(iconStream);
+
+					userIcon = new ImageView();
+					userIcon.setImage(icon);
+
+					userIcon.setFitHeight(150);
+					userIcon.setFitWidth(150);
+
+					userIcon.setTranslateX(375);
+					userIcon.setTranslateY(95);
+
+					TextArea userName = new TextArea();
+					userName.setPromptText("username");
+					userName.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
+
+					userName.setPrefWidth(250);
+					userName.setPrefHeight(50);
+
+					userName.setTranslateX(325);
+					userName.setTranslateY(275);
+
+					PasswordField passWord = new PasswordField();
+					passWord.setPromptText("password");
+					passWord.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
+
+					passWord.setPrefWidth(250);
+					passWord.setPrefHeight(50);
+
+					passWord.setTranslateX(325);
+					passWord.setTranslateY(350);
+
+					TextArea displayName = new TextArea("");
+					displayName.setPromptText("display name");
+					displayName.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
+
+					displayName.setPrefWidth(250);
+					displayName.setPrefHeight(50);
+
+					displayName.setTranslateX(325);
+					displayName.setTranslateY(425);
+
+
+					Button create = new Button("CREATE ACCOUNT");
+					create.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+					create.setFont(new Font("Times New Roman", 20));
+					create.setPrefWidth(250);
+
+					create.setTranslateX(325);
+					create.setTranslateY(525);
+
+					create.setOnMouseEntered(event -> {
+						create.setStyle("-fx-background-radius: 20px; -fx-text-fill: #EFA565; -fx-background-color: #897361;");
+					});
+
+					create.setOnMouseExited(event -> {
+						create.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+					});
+
+					create.setOnAction(new EventHandler<ActionEvent>() {
+
+						@Override
+						public void handle(ActionEvent event) {
+
+							String username = userName.getText();
+							String password = passWord.getText();
+							String screenName = displayName.getText();
+
+							if(!DB.validUsername(username))
+							{
+								Alert alert = new Alert(Alert.AlertType.WARNING);
+								alert.setTitle("Error");
+								alert.setHeaderText("Account creation failed: Username in use.");
+								alert.setContentText("Please use a different username.");
+								alert.showAndWait();
+							}
+							else if(!DB.validScreenName(screenName))
+							{
+								Alert alert = new Alert(Alert.AlertType.WARNING);
+								alert.setTitle("Error");
+								alert.setHeaderText("Account creation failed: Screen name in use.");
+								alert.setContentText("Please use a different screen name.");
+								alert.showAndWait();
+							}
+							else
+							{
+								DB.insertUser(username, password, screenName);
+
+								Alert alert = new Alert(Alert.AlertType.WARNING);
+								alert.setTitle("Success");
+								alert.setHeaderText("Account was created successfully.");
+								alert.setContentText("Please return to the menu and login.");
+								alert.showAndWait();
+							}
+						}
+
+					});
+
+					Button previousButton = previousButton(primaryStage);
+
+					createAccountGroup.getChildren().addAll(previousButton, userName, passWord, displayName, userIcon, create);
+					createAccountScene.setFill(Color.web("#FFFDD0"));
+
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+
+					e1.printStackTrace();
+
 				}
-            	   
-               });
-               
-               Button previousButton = previousButton(primaryStage);
-               
-               createAccountGroup.getChildren().addAll(previousButton, userName, passWord, displayName, userIcon, create);
-               createAccountScene.setFill(Color.web("#FFFDD0"));
-			
-			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
-				
-				e1.printStackTrace();
-				
-			}
-			
-               primaryStage.setScene(createAccountScene);
-               primaryStage.show();
-            }
-        });
 
-    	return createAccountButton;
-    }
-    
-    public Button previousButton(Stage primaryStage) {
-    	
-    	Button previousButton = new Button("Previous"); 
-    	previousButton.setTranslateX(800);
-        previousButton.setTranslateY(650);
-         
-        previousButton.setOnAction(f->primaryStage.setScene(scene));
-        previousButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
-       
-        previousButton.setOnMouseEntered(event -> {
-    	    previousButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #EFA565; -fx-background-color: #897361;");
-    	});
-    	
-    	previousButton.setOnMouseExited(event -> {
-    	    previousButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
-    	});
-    	
-        return previousButton;
-    }
-    
-    public Button loginButton(Stage primaryStage) {
-    	Button loginButton = new Button("LOGIN");
-        
-        loginButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
-        loginButton.setFont(new Font("Times New Roman", 20));
-        loginButton.setPrefWidth(250);
-        
-        loginButton.setOnMouseEntered(event -> {
-    	    loginButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #EFA565; -fx-background-color: #897361;");
-    	});
-    	
-    	loginButton.setOnMouseExited(event -> {
-    	    loginButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
-    	});
-        
-        loginButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                // TODO: Add logic for joining a room
-            	
-            	Group loginGroup = new Group();
-                Scene loginScene = new Scene(loginGroup,900,700);
-                
-                Label loginTitle = new Label("LOGIN");
-                
-                loginTitle.setFont(new Font("Times New Roman", 50));
-                loginTitle.setStyle("-fx-text-fill: #897361;");
-                
-                loginTitle.setTranslateX(370);
-                loginTitle.setTranslateY(100);
-                
-                Label username = new Label("USERNAME:");
-                
-                username.setTranslateX(250);
-                username.setTranslateY(265);
-                
-                username.setFont(new Font("Times New Roman", 25));
-                username.setStyle("-fx-text-fill: #897361;");
-                
-                TextArea userText = new TextArea();
-                userText.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
-            	
-                userText.setPrefWidth(250);
-            	userText.setPrefHeight(50);
-            	
-            	userText.setTranslateX(425);
-            	userText.setTranslateY(250);
-                
-                Label password = new Label("PASSWORD:");
-                
-                password.setFont(new Font("Times New Roman", 25));
-                password.setStyle("-fx-text-fill: #897361;");
-                
-                password.setTranslateX(250);
-                password.setTranslateY(365);
-                
-                PasswordField passText = new PasswordField();
-                passText.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
-            	
-                passText.setPrefWidth(250);
-            	passText.setPrefHeight(50);
-            	
-            	passText.setTranslateX(425);
-            	passText.setTranslateY(350);
-            	
-            	//Add login button functionality
-            	Button loginButton = new Button("LOGIN");
-                loginButton.setStyle("-fx-background-radius: 25px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
-                
-                loginButton.setTranslateX(370);
-                loginButton.setTranslateY(500);
-                
-                loginButton.setPrefWidth(200);
-                
-                loginButton.setOnMouseEntered(event -> {
-            	    loginButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #EFA565; -fx-background-color: #897361;");
-            	});
-            	
-            	loginButton.setOnMouseExited(event -> {
-            	    loginButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
-            	});
-                
-                loginButton.setFont(new Font("Times New Roman", 25));
-            	
-                loginButton.setOnAction(new EventHandler<ActionEvent>() {
+				primaryStage.setScene(createAccountScene);
+				primaryStage.show();
+			}
+		});
+
+		return createAccountButton;
+	}
+
+	public Button previousButton(Stage primaryStage) {
+
+		Button previousButton = new Button("Previous"); 
+		previousButton.setTranslateX(780);
+		previousButton.setTranslateY(630);
+
+		previousButton.setOnAction(f->primaryStage.setScene(scene));
+		previousButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+
+		previousButton.setOnMouseEntered(event -> {
+			previousButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #EFA565; -fx-background-color: #897361;");
+		});
+
+		previousButton.setOnMouseExited(event -> {
+			previousButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+		});
+
+		return previousButton;
+	}
+
+	public Button loginButton(Stage primaryStage) {
+		Button loginButton = new Button("LOGIN");
+
+		loginButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+		loginButton.setFont(new Font("Times New Roman", 20));
+		loginButton.setPrefWidth(250);
+
+		loginButton.setOnMouseEntered(event -> {
+			loginButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #EFA565; -fx-background-color: #897361;");
+		});
+
+		loginButton.setOnMouseExited(event -> {
+			loginButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+		});
+
+		loginButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				// TODO: Add logic for joining a room
+
+				Group loginGroup = new Group();
+				Scene loginScene = new Scene(loginGroup,900,700);
+
+				Label loginTitle = new Label("LOGIN");
+
+				loginTitle.setFont(new Font("Times New Roman", 50));
+				loginTitle.setStyle("-fx-text-fill: #897361;");
+
+				loginTitle.setTranslateX(370);
+				loginTitle.setTranslateY(100);
+
+				Label username = new Label("USERNAME:");
+
+				username.setTranslateX(250);
+				username.setTranslateY(265);
+
+				username.setFont(new Font("Times New Roman", 25));
+				username.setStyle("-fx-text-fill: #897361;");
+
+				TextArea userText = new TextArea();
+				userText.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
+
+				userText.setPrefWidth(250);
+				userText.setPrefHeight(50);
+
+				userText.setTranslateX(425);
+				userText.setTranslateY(250);
+
+				Label password = new Label("PASSWORD:");
+
+				password.setFont(new Font("Times New Roman", 25));
+				password.setStyle("-fx-text-fill: #897361;");
+
+				password.setTranslateX(250);
+				password.setTranslateY(365);
+
+				PasswordField passText = new PasswordField();
+				passText.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
+
+				passText.setPrefWidth(250);
+				passText.setPrefHeight(50);
+
+				passText.setTranslateX(425);
+				passText.setTranslateY(350);
+
+				//Add login button functionality
+				Button loginButton = new Button("LOGIN");
+				loginButton.setStyle("-fx-background-radius: 25px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+
+				loginButton.setTranslateX(370);
+				loginButton.setTranslateY(500);
+
+				loginButton.setPrefWidth(200);
+
+				loginButton.setOnMouseEntered(event -> {
+					loginButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #EFA565; -fx-background-color: #897361;");
+				});
+
+				loginButton.setOnMouseExited(event -> {
+					loginButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+				});
+
+				loginButton.setFont(new Font("Times New Roman", 25));
+
+				loginButton.setOnAction(new EventHandler<ActionEvent>() {
 
 					@Override
 					public void handle(ActionEvent event) {
-						
+
 						String userName = userText.getText();
 						String passWord = passText.getText();
-						
+
 						if(loggedIn)
 						{
 							Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -595,13 +749,13 @@ public class JavaFX extends Application {
 						else if(DB.login(userName, passWord))
 						{
 							playerProfile = new Player(userName, DB.getDisplayName(userName));
-							
+
 							Alert alert = new Alert(Alert.AlertType.WARNING);
 							alert.setTitle("Success");
 							alert.setHeaderText("Login was successful.");
 							alert.setContentText("Please return to the menu.");
 							alert.showAndWait();
-							
+
 							setLoggedInTrue();
 						}
 						else
@@ -613,30 +767,30 @@ public class JavaFX extends Application {
 							alert.showAndWait();
 						}
 					}
-                	
-                });
-                
-                Button previousButton = previousButton(primaryStage);
-                
-                loginGroup.getChildren().addAll(previousButton, loginTitle, username, password, userText, passText, loginButton);
-               
-                loginScene.setFill(Color.web("#FFFDD0"));
-                
-                primaryStage.setScene(loginScene);
-                primaryStage.show();
-            }
-        });
-        return loginButton;
-    	
-    }
-    
-    public Button joinButton(Stage primaryStage) {
-    	Button joinButton = new Button("JOIN A ROOM");
+
+				});
+
+				Button previousButton = previousButton(primaryStage);
+
+				loginGroup.getChildren().addAll(previousButton, loginTitle, username, password, userText, passText, loginButton);
+
+				loginScene.setFill(Color.web("#FFFDD0"));
+
+				primaryStage.setScene(loginScene);
+				primaryStage.show();
+			}
+		});
+		return loginButton;
+
+	}
+
+	public Button joinButton(Stage primaryStage) {
+		Button joinButton = new Button("JOIN A ROOM");
 
 		joinButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
 		joinButton.setFont(new Font("Times New Roman", 20));
 		joinButton.setPrefWidth(250);
-		
+
 		joinButton.setOnMouseEntered(event -> {
     	    joinButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #EFA565; -fx-background-color: #897361;");
     	});
@@ -961,5 +1115,6 @@ public class JavaFX extends Application {
     	game.setPrompt();
     	launch();
     }
+
 
 }
