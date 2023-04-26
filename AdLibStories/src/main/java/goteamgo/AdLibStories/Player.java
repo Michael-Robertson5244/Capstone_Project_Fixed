@@ -3,15 +3,47 @@
 
 package goteamgo.AdLibStories;
 
-import java.util.Scanner;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.net.Socket;
 
-public class Player {
+public class Player implements Serializable{
 
+	private static final long serialVersionUID = 5950169519310163575L;
 	int playerNum;
 	String username;
 	String displayName;
-	Scanner scan = new Scanner(System.in);
+	Socket client;
+	ObjectOutputStream os;
+	ObjectInputStream is;
 
+	public Socket getClient() {
+		return client;
+	}
+
+	public void setClient(Socket client) {
+		this.client = client;
+	}
+
+	public ObjectOutputStream getOs() {
+		return os;
+	}
+
+	public void setOs(ObjectOutputStream os) {
+		this.os = os;
+	}
+
+	public ObjectInputStream getIs() {
+		return is;
+	}
+
+	public void setIs(ObjectInputStream is) {
+		this.is = is;
+	}
+
+	public Player() {}
+	
 	public Player(String username, String displayName) {
 		this.username = username;
 		this.displayName = displayName;
@@ -41,5 +73,8 @@ public class Player {
 		this.displayName = displayName;
 	}
 
-	
+	public String toString()
+	{
+		return "Username = " + getUsername() + " ; DisplayName = " + getDisplayName();
+	}
 }
