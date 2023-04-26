@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 import java.io.*;
@@ -60,6 +61,7 @@ public class JavaFX extends Application {
 	Scene scene = new Scene(stackPane,900,700);
 	boolean loggedIn = false;
 	Player playerProfile;
+	ArrayList<Player> players = new ArrayList<Player>();
 	
 	//SpellChecker spellchecker = profile.spellChecker();
 			
@@ -69,6 +71,7 @@ public class JavaFX extends Application {
 	static int portNo = 60999;
 	private ObjectOutputStream outputObject;
 	private ObjectInputStream inputObject;
+	private static String roomCode;
 	
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -118,7 +121,10 @@ public class JavaFX extends Application {
     }
 
     //Need to add a button that lets the user attempt to add to the story what is in the textArea
-    public void playGame(Stage primaryStage) {
+    public void playGame(Stage primaryStage) throws UnknownHostException {
+    	
+    	InetAddress localhost = InetAddress.getLocalHost();
+    	
     	Group playGroup = new Group();
         Scene playScene = new Scene(playGroup,900,700);
     	
@@ -130,7 +136,15 @@ public class JavaFX extends Application {
     	playerNames.setFont(new Font("Times New Roman", 20));
     	playerNames.setStyle("-fx-text-fill: #897361;");
     	
-    	TextArea storyTextArea = new TextArea("story line goes here");
+    	Label joinCode = new Label("Room Code: " + roomCode);
+    	
+    	joinCode.setTranslateX(40);
+    	joinCode.setTranslateY(650);
+    	
+    	joinCode.setFont(new Font("Times New Roman", 20));
+    	joinCode.setStyle("-fx-text-fill: #897361;");
+    	
+    	TextArea storyTextArea = new TextArea();
     	storyTextArea.setFont(new Font("Times New Roman", 20));
     	storyTextArea.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
     	
@@ -187,14 +201,25 @@ public class JavaFX extends Application {
             		
             		public void handle(ActionEvent actionEvent) {
             		
-            			//TODO: Check if it is the players turn. If not then do nothing
+            			try {
+            				//TODO: Check if it is the players turn. If not then do nothing
+                			
+                			
+                			//TODO: If players turn take the text and send it to the server and update all users
+                			String textFromArea = storyEntryTextArea.getText();
+                			System.out.println("Submitted text: " + textFromArea);
+                			
+							outputObject.writeObject(textFromArea);
+							
+							storyTextArea.appendText(textFromArea + "\n");
+	            			storyEntryTextArea.setText("");
+	            			//System.out.println(Thread.currentThread().getName());
+						} 
+            			catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
             			
-            			//TODO: If players turn take the text and send it to the server and update all users
-            			String textFromArea = storyEntryTextArea.getText();
-            			System.out.println("Submitted text: " + textFromArea);
-            			storyTextArea.appendText(textFromArea + "\n");
-            			storyEntryTextArea.setText("");
-            		
             		}
             		
             	});
@@ -237,7 +262,7 @@ public class JavaFX extends Application {
             	    previousButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
             	});
         
-        playGroup.getChildren().addAll(previousButton, submitButton, promptText, promptLabel, storyTextArea, storyEntryTextArea, playerNames);
+        playGroup.getChildren().addAll(previousButton, submitButton, promptText, promptLabel, storyTextArea, storyEntryTextArea, playerNames, joinCode);
         playScene.setFill(Color.web("#FFFDD0"));
         
         primaryStage.setScene(playScene);
@@ -298,8 +323,7 @@ public class JavaFX extends Application {
         });
         return playButton;
     }
-    
-    
+     
     public Button createAccountButton(Stage primaryStage) {
     	Button createAccountButton = new Button("CREATE AN ACCOUNT");
         
@@ -775,7 +799,6 @@ public class JavaFX extends Application {
     	return createButton;
     }
     
-    
     public Button profileButton(Stage primaryStage) {
     	Button profileButton = new Button("PROFILE");
     	profileButton.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
@@ -878,27 +901,17 @@ public class JavaFX extends Application {
     	
     	return profileButton;
     }
-    
-    
-    public Button sendButton(Stage primaryStage) {
-    	
-    	Button send = new Button("Send");
-        send.setTranslateX(400);
-        send.setTranslateY(650);
-        
-        return send;
-    }
-    
-    
+     
     public void setLoggedInTrue() {
     	this.loggedIn = true;
     }
-    
     
     public void joinServer(Stage primaryStage, String IP) {
     	//Need to check if the connection to the server is good
 		try {
 			client = new Socket(IP, portNo);
+			
+			roomCode = client.getInetAddress().getHostAddress();
 			
 			//TODO: Send the player object to the server so it has it
 			outputObject = new ObjectOutputStream(client.getOutputStream());
@@ -912,7 +925,8 @@ public class JavaFX extends Application {
 				System.out.println("Player number: " + playerProfile.getPlayerNum());
 			
 				//TODO: Receive list of players and player number so that turns can be tracked
-			
+				//players = (ArrayList<Player>)inputObject.readObject();
+				
 				//Goes to the game screen
 				playGame(primaryStage);
 			}

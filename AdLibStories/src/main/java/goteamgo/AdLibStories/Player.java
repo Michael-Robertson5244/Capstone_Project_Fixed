@@ -3,7 +3,10 @@
 
 package goteamgo.AdLibStories;
 
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.net.Socket;
 
 public class Player implements Serializable{
 
@@ -11,6 +14,33 @@ public class Player implements Serializable{
 	int playerNum;
 	String username;
 	String displayName;
+	Socket client;
+	ObjectOutputStream os;
+	ObjectInputStream is;
+
+	public Socket getClient() {
+		return client;
+	}
+
+	public void setClient(Socket client) {
+		this.client = client;
+	}
+
+	public ObjectOutputStream getOs() {
+		return os;
+	}
+
+	public void setOs(ObjectOutputStream os) {
+		this.os = os;
+	}
+
+	public ObjectInputStream getIs() {
+		return is;
+	}
+
+	public void setIs(ObjectInputStream is) {
+		this.is = is;
+	}
 
 	public Player() {}
 	
