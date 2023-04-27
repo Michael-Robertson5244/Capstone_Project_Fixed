@@ -946,7 +946,7 @@ public class JavaFX extends Application {
             		//Need to change it so that it will handle more than one person and keep track of turns.
             		Button playButton = playButton(primaryStage, numPlayers);
             		playButton.setTranslateY(550);
-            		playButton.setTranslateX(300);
+    				playButton.setTranslateX(320);
                 
             		createRoomGroup.getChildren().addAll(createRoomLabel, numPlayers, previousButton, playButton);
             		createRoomScene.setFill(Color.web("#FFFDD0"));
