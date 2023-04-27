@@ -2,4 +2,4 @@
 
 A multiplayer, collaborative, story writing game
 
-##Overview about the submission structure
+## Overview about the submission structure
