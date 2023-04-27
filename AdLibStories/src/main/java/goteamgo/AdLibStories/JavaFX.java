@@ -58,8 +58,6 @@ public class JavaFX extends Application {
 	boolean loggedIn = false;
 	Player playerProfile;
 	ArrayList<Player> players = new ArrayList<Player>();
-  
-	//SpellChecker spellchecker = profile.spellChecker();
 
 	static Game game = new Game();
 	Socket client;
@@ -124,7 +122,7 @@ public class JavaFX extends Application {
     	Group playGroup = new Group();
         Scene playScene = new Scene(playGroup,900,700);
     	
-      InputStream playerIconStream;
+        InputStream playerIconStream;
 		
 		Image playerIcon;
 		ImageView thisPlayer;
@@ -202,6 +200,7 @@ public class JavaFX extends Application {
     	joinCode.setStyle("-fx-text-fill: #897361;");
     	
     	TextArea storyTextArea = new TextArea();
+    	storyTextArea.setWrapText(true);
     	storyTextArea.setFont(new Font("Times New Roman", 20));
     	storyTextArea.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
     	
@@ -350,23 +349,33 @@ public class JavaFX extends Application {
         		submitButton.setTranslateX(325);
         		submitButton.setTranslateY(600);
             	
+        		Label scoreLabel = new Label();
+        		scoreLabel.setStyle("-fx-text-fill: #897361;");
+        		scoreLabel.setFont(new Font("Times New Roman", 20));
+        		
+        		scoreLabel.setTranslateX(100);
+        		scoreLabel.setTranslateY(300);
+        		
             	submitButton.setOnAction(new EventHandler<ActionEvent>() {
-            		
+        
             		public void handle(ActionEvent actionEvent) {
             		
             			try {
             				//TODO: Check if it is the players turn. If not then do nothing
                 			
-                			
+                			SentenceScorer sc = new SentenceScorer("random");
                 			//TODO: If players turn take the text and send it to the server and update all users
                 			String textFromArea = storyEntryTextArea.getText();
+                			double getScore = sc.score(textFromArea);
+                			String scoreText = String.format("%.2f", getScore); 
+                			scoreLabel.setText(scoreText);
+                			
                 			System.out.println("Submitted text: " + textFromArea);
                 			
 							outputObject.writeObject(textFromArea);
 							
 							storyTextArea.appendText(textFromArea + "\n");
 	            			storyEntryTextArea.setText("");
-	            			//System.out.println(Thread.currentThread().getName());
 						} 
             			catch (IOException e) {
 							// TODO Auto-generated catch block
@@ -405,7 +414,7 @@ public class JavaFX extends Application {
     	promptLabel.setTranslateX(140);
     	promptLabel.setTranslateY(85);
         
-        playGroup.getChildren().addAll(submitButton, promptText, promptLabel, storyTextArea, storyEntryTextArea, playerNames, joinCode, thisPlayer, disconnectButton, gameOptions, displayButton, rectangleView);
+        playGroup.getChildren().addAll(submitButton, promptText, promptLabel, storyTextArea, storyEntryTextArea, playerNames, joinCode, scoreLabel, thisPlayer, disconnectButton, gameOptions, displayButton, rectangleView);
         playScene.setFill(Color.web("#FFFDD0"));
         
         } catch (FileNotFoundException e1) {
@@ -974,7 +983,36 @@ public class JavaFX extends Application {
             	if(loggedIn)
             	{
             		String playerUser = playerProfile.getUsername();
-            		//playerProfile.getDisplayName();
+            		
+            		Button logout = new Button("LOGOUT");
+            		logout.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+            		logout.setFont(new Font("Times New Roman", 20));
+            		
+            		logout.setPrefWidth(250);
+            		logout.setPrefHeight(20);
+                	
+            		logout.setTranslateX(325);
+            		logout.setTranslateY(450);
+            		
+            		logout.setOnMouseEntered(event -> {
+                	    logout.setStyle("-fx-background-radius: 20px; -fx-text-fill: #EFA565; -fx-background-color: #897361;");
+                	});
+                	
+                	logout.setOnMouseExited(event -> {
+                	    logout.setStyle("-fx-background-radius: 20px; -fx-text-fill: #897361; -fx-background-color: #EFA565;");
+                	});
+            		
+            		logout.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent e) {
+                        	
+                        	playerProfile.clear();
+                        	loggedIn = false;
+                        	System.out.println("logged out");
+                  
+                        }
+                       });
+            		
             	
             		Label playerUsername = new Label("Username:");
             	
@@ -1036,7 +1074,7 @@ public class JavaFX extends Application {
                 
                 	Button previousButton = previousButton(primaryStage);
 
-                	profileGroup.getChildren().addAll(previousButton, playerUsername, playerDisplay, playerUsernameText, playerDisplayText);
+                	profileGroup.getChildren().addAll(previousButton, playerUsername, playerDisplay, playerUsernameText, playerDisplayText, logout);
                 	profileScene.setFill(Color.web("#FFFDD0"));
                 
                 	primaryStage.setScene(profileScene);
