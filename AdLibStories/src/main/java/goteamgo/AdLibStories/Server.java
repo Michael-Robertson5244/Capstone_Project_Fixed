@@ -153,18 +153,14 @@ class UserHandler implements Runnable {
   }
 
 	public void run() {
-		String message;
-
+		String sc = " ";
 		// when there is a new message, broadcast to all
-		Scanner sc;
-		try {
-			sc = new Scanner(player.getIs());
-			
-			while (sc.hasNextLine()) 
+		try {			
+			while (sc != null) 
 			{
-				message = sc.nextLine();
+				sc = (String) (player.getIs().readObject());
 
-				System.out.println(message);
+				System.out.println(sc);
 				System.out.println("In the thread to handle the players submission.");
 				
       			//server.broadcastMove(message);
@@ -172,7 +168,6 @@ class UserHandler implements Runnable {
 			// end of Thread
 			server.removePlayer(player);
 			this.server.broadcastPlayers();
-			sc.close();
 		} 
 		catch (IOException e) {
 			e.printStackTrace();
