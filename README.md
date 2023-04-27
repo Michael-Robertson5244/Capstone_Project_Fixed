@@ -2,4 +2,6 @@
 
 A multiplayer, collaborative, story writing game
 
-## Overview about the submission structure
+## Submission Structure Overview
+
+//Put the structure of the folder that will be submitted as the final submission
