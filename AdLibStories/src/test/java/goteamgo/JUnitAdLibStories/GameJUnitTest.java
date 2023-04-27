@@ -45,7 +45,7 @@ public class GameJUnitTest {
 	//Test unsuccessful mongodb connection
 	//If unsuccessful, Connection Error will be returned as prompt
 	//When testing, you will get one success and one fail, the database can't connect successfully and unsuccessfully
-/*	@Test
+	/*@Test
 	public void testUnsuccessfulMongoDBConnection() {
 		DB db = new DB();
 		
@@ -58,10 +58,10 @@ public class GameJUnitTest {
 	@Test
 	public void testExistingScreenName() {
 		DB db = new DB();
-		String screenName = "BigMommyEd";
+		String screenName = "test";
 		assertFalse(db.validScreenName(screenName));
 		
-		screenName = "YaBoiMichael5244";
+		screenName = "Yaboi5244";
 		assertFalse(db.validScreenName(screenName));
 		
 		screenName = "tia3";
@@ -72,7 +72,7 @@ public class GameJUnitTest {
 	@Test
 	public void testExistingUserName(){
 		DB db = new DB();
-		String username = "BigMommyEd";
+		String username = "test";
 		assertFalse(db.validUsername(username));
 		
 		username = "Michael5244";
@@ -81,24 +81,54 @@ public class GameJUnitTest {
 		username = "tiasharpe";
 		assertFalse(db.validUsername(username));
 		
+	}
 	
+	@Test
+	public void testEncrypt() {
+		DB db = new DB();
+		
+		String password = "test";
+		
+		assertTrue(db.encrypt(password) != password);
+	}
+	
+	@Test
+	public void testCheckPasswordMatch() {
+		DB db = new DB();
+		
+		String password = "password";
+		String encryptedPass = db.encrypt(password);
+		
+		assertTrue(db.checkPassword(password,encryptedPass));	
+		
+	}
+	
+	@Test
+	public void testCheckPasswordNoMatch() {
+		DB db = new DB();
+		
+		String password = "password";
+		String encryptedPass = db.encrypt("password1");
+		
+		assertFalse(db.checkPassword(password, encryptedPass));
+		
 	}
 	
 	//test full register of a non existing profile
 	//MUST DELETE TEST USER FROM MONGODB AFTER RUNNING THIS TEST
+	// old encryption test
 	@Test
 	public void testRegisterNonExisting() {
 		DB db = new DB();
 		String username = "testUser";
 		String password = "testPassword";
 		String displayName = "testDisplay";
-		//EncryptPassword encrypt = new EncryptPassword();
-		//String encryptedPass = encrypt.encrypt(password);
+		String encryptedPass = db.encrypt(password);
 		
 		assertTrue(db.validUsername(username));
 		assertTrue(db.validScreenName(displayName));
 		
-		//db.insertUser(username,encryptedPass,displayName);
+		db.insertUser(username,encryptedPass,displayName);
 		
 		assertFalse(db.validUsername(username));
 		assertFalse(db.validScreenName(displayName));
@@ -106,15 +136,15 @@ public class GameJUnitTest {
 	
 	//test login success
 	//MUST DELETE TEST USER FROM MONGODB WHEN RUNNING
+	//old encryption test
 	@Test
 	public void testLoginSuccess() {
 		DB db = new DB();
-		String username = "testUser2";
-		String password = "testPassword";
-		String displayName = "testDisplay2";
-		//EncryptPassword encrypt = new EncryptPassword();
-		//String encryptedPass = encrypt.encrypt(password);
-		//db.insertUser(username,encryptedPass,displayName);
+		String username = "test";
+		String password = "test";
+		String displayName = "test";
+		String encryptedPass = db.encrypt(password);
+		db.insertUser(username,encryptedPass,displayName);
 		
 		assertTrue(db.login(username, password));
 		
@@ -128,31 +158,39 @@ public class GameJUnitTest {
 		
 		assertFalse(db.login(username, password));
 		
+		username = "test";
+		assertFalse(db.login(username, password));
+		
+		username = "username";
+		password = "test";
+		assertFalse(db.login(username, password));
 	}
 	//test password encryption
-	@Test
+	// old encryption test
+	/*@Test
 	public void testPassEncryption() {
 		String password = "password";
-		//EncryptPassword encrypt = new EncryptPassword();
+		EncryptPassword encrypt = new EncryptPassword();
 		
-		//String encryptedPassword = encrypt.encrypt(password);
-		//assertNotEquals(password,encryptedPassword);
-	}
+		String encryptedPassword = encrypt.encrypt(password);
+		assertNotEquals(password,encryptedPassword);
+	}*/
 	
 	//tests to see if given the same password, if the encryption matches
 	//test password encryption for the same password
-	@Test
+	//old encryption test
+	/*@Test
 	public void testSamePassEncryption() {
 		String password1 = "password";
 		String password2 = "password";
-		//EncryptPassword encrypt = new EncryptPassword();
+		EncryptPassword encrypt = new EncryptPassword();
 		
-		//String encryptedPassword1 = encrypt.encrypt(password1);
-		//String encryptedPassword2 = encrypt.encrypt(password2);
+		String encryptedPassword1 = encrypt.encrypt(password1);
+		String encryptedPassword2 = encrypt.encrypt(password2);
 	
 		assertEquals(password1,password2);
-		//assertEquals(encryptedPassword1,encryptedPassword2);
-	}
+		assertEquals(encryptedPassword1,encryptedPassword2);
+	}*/
 	
 	//Each method in sentence scorer
 	
