@@ -405,7 +405,7 @@ public class JavaFX extends Application {
     	promptLabel.setTranslateX(140);
     	promptLabel.setTranslateY(85);
         
-        playGroup.getChildren().addAll(previousButton, submitButton, promptText, promptLabel, storyTextArea, storyEntryTextArea, playerNames, joinCode);
+        playGroup.getChildren().addAll(submitButton, promptText, promptLabel, storyTextArea, storyEntryTextArea, playerNames, joinCode, thisPlayer, disconnectButton, gameOptions, displayButton, rectangleView);
         playScene.setFill(Color.web("#FFFDD0"));
         
         } catch (FileNotFoundException e1) {
@@ -884,8 +884,8 @@ public class JavaFX extends Application {
         createRoomLabel.setFont(new Font("Times New Roman", 30));
         createRoomLabel.setStyle("-fx-text-fill: #897361;");
         
-        createRoomLabel.setTranslateX(80);
-        createRoomLabel.setTranslateY(350);
+        createRoomLabel.setTranslateX(200);
+        createRoomLabel.setTranslateY(250);
     	
         //Will create the server.
     	Button createButton = new Button("CREATE A ROOM");
@@ -920,11 +920,11 @@ public class JavaFX extends Application {
             		TextArea numPlayers = new TextArea("");
             		numPlayers.setFont(new Font("Times New Roman", 20));
             	
-            		numPlayers.setPrefWidth(40);
+            		numPlayers.setPrefWidth(250);
             		numPlayers.setPrefHeight(30);
             	
-            		numPlayers.setTranslateX(400);
-            		numPlayers.setTranslateY(345);
+            		numPlayers.setTranslateX(320);
+            		numPlayers.setTranslateY(350);
             	
             		numPlayers.setStyle("-fx-control-inner-background: #EFA565; -fx-background-color: #EFA565; -fx-text-fill: #897361; ");
             		numPlayers.setEditable(true);
