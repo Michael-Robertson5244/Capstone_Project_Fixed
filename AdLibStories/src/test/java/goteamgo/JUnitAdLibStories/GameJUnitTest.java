@@ -83,6 +83,7 @@ public class GameJUnitTest {
 		
 	}
 	
+	//test that ensure that the password given is not the same password returned
 	@Test
 	public void testEncrypt() {
 		DB db = new DB();
@@ -92,6 +93,7 @@ public class GameJUnitTest {
 		assertTrue(db.encrypt(password) != password);
 	}
 	
+	//tests to match the original password with its encrypted version
 	@Test
 	public void testCheckPasswordMatch() {
 		DB db = new DB();
@@ -103,6 +105,7 @@ public class GameJUnitTest {
 		
 	}
 	
+	//tests to make sure if the password and encrypted password do not match, that is false
 	@Test
 	public void testCheckPasswordNoMatch() {
 		DB db = new DB();
