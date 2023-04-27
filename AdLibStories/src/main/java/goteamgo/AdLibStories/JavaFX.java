@@ -360,6 +360,8 @@ public class JavaFX extends Application {
         
             		public void handle(ActionEvent actionEvent) {
             		
+            			double totalScore = 0.0;
+            			
             			try {
             				//TODO: Check if it is the players turn. If not then do nothing
                 			
@@ -367,10 +369,12 @@ public class JavaFX extends Application {
                 			//TODO: If players turn take the text and send it to the server and update all users
                 			String textFromArea = storyEntryTextArea.getText();
                 			double getScore = sc.score(textFromArea);
-                			String scoreText = String.format("%.2f", getScore); 
+                			
+                			totalScore += getScore;
+                			String scoreText = String.format("%.2f", totalScore);     
                 			scoreLabel.setText(scoreText);
                 			
-                			System.out.println("Submitted text: " + textFromArea);
+                			System.out.println("Submitted text: " + totalScore);
                 			
 							outputObject.writeObject(textFromArea);
 							
