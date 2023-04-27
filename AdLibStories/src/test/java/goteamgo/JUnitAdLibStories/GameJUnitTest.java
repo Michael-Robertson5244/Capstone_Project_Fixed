@@ -169,7 +169,7 @@ public class GameJUnitTest {
 		assertFalse(db.login(username, password));
 	}
 	//test password encryption
-	// old encryption test
+	// old encryption test, will not work now
 	/*@Test
 	public void testPassEncryption() {
 		String password = "password";
@@ -181,7 +181,7 @@ public class GameJUnitTest {
 	
 	//tests to see if given the same password, if the encryption matches
 	//test password encryption for the same password
-	//old encryption test
+	//old encryption test, will not work now
 	/*@Test
 	public void testSamePassEncryption() {
 		String password1 = "password";
