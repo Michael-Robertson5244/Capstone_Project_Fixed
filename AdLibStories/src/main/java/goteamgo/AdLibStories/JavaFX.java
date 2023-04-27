@@ -438,7 +438,8 @@ public class JavaFX extends Application {
       
 		playButton.setFont(new Font("Times New Roman", 20));
 
-		playButton.setTranslateX(450);
+		playButton.setTranslateX(550);
+		playButton.setTranslateY(portNo);
 		playButton.setPrefWidth(250);
 
 		playButton.setOnMouseEntered(event -> {
@@ -897,7 +898,7 @@ public class JavaFX extends Application {
         createRoomLabel.setFont(new Font("Times New Roman", 30));
         createRoomLabel.setStyle("-fx-text-fill: #897361;");
         
-        createRoomLabel.setTranslateX(200);
+        createRoomLabel.setTranslateX(290);
         createRoomLabel.setTranslateY(250);
     	
         //Will create the server.
