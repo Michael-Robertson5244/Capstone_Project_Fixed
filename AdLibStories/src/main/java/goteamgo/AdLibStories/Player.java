@@ -72,6 +72,12 @@ public class Player implements Serializable{
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
 	}
+	
+	public void clear() {
+		username = "";
+		displayName = "";
+		playerNum = 0;
+	}
 
 	public String toString()
 	{

@@ -1,6 +1,7 @@
 package goteamgo.AdLibStories;
 
 import java.util.Properties;
+import java.text.DecimalFormat;
 import edu.stanford.nlp.pipeline.*;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
@@ -29,7 +30,13 @@ public class SentenceScorer {
         double adjScore = countAdjectives(sentence) * 2.0; // Reward sentences with more adjectives
         double wordScore = containsTargetWord(sentence) ? 5.0 : 0.0; // Reward sentences that contain a specific word
         double readScore = getReadabilityScore(sentence); // Calculate readability score
-        return adjScore + wordScore + readScore;
+        double totalScore = adjScore + wordScore + readScore;
+        
+        if(totalScore < 0.0) {
+        	totalScore = 0;
+        }
+        
+        return totalScore;
     }
     
     public int countAdjectives(String sentence) {
@@ -93,7 +100,6 @@ public class SentenceScorer {
             syllables += countSyllables(word);
         }
         double score = (0.39 * (words / (double) sentences)) + (11.8 * (syllables / (double) words)) - (15.59);
-        System.out.println(score);
         return score;
     }
 
