@@ -1,3 +1,7 @@
+# Overview about the submission structure
+
+//Have the submission structure for the final submission here
+
 # AdLibStories JavaFX Application
 
 This JavaFX application is designed to let users play a game where they can create a story by taking turns in writing. The application has two main scenes, the login and the gameplay scene. 
