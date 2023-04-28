@@ -1,4 +1,4 @@
-# Overview about the submission structure
+# Overview of the submission structure
 
 //Have the submission structure for the final submission here
 
