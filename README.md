@@ -38,4 +38,4 @@ The scene also displays the current player's icon and a rectangle box at the rig
 
 To run the application, run the `JavaFX` class. The main method of the class calls the `start` method, which initializes the login scene. 
 
-Please note that this code has not been implemented with several functionality, including the button that lets the user attempt to add to the story what is in the textArea.
+Please note that this code has not been implemented with several functionality.
