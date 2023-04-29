@@ -1,6 +1,8 @@
 # Overview of the submission structure
 
 //Have the submission structure for the final submission here
+Final Submission: Contents(Project Report.pdf, Source Code.pdf, User Guide for Capstone Project.pdf)
+  Source Code.pdf: includes Github link and MongoDB link to our database
 
 # AdLibStories JavaFX Application
 
